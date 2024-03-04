@@ -7,7 +7,7 @@ public class Main {
         Random baseGen = new Random(1);
         Sem1 simA = new Sem1(baseGen, new int[]{5, 3, 1, 1});
         simA.setRunning(true);
-        simA.executeReplications(100000000, null,null, null, null);
+        simA.executeReplications(1000000, null,null, null, null);
 
         Sem1 simB = new Sem1(baseGen, new int[]{3, 3, 3, 1});
         simB.setRunning(true);

@@ -25,8 +25,7 @@ public class ContinuousEmpiricalDistributionGenerator {
             pParams += par.getP();
 
             if (pGen < pParams && !valueGenerated) {
-                double range = par.getMax() - par.getMin();
-                value = par.getMin() + valueRandList.get(indexRand).nextDouble() * range;
+                value = valueRandList.get(indexRand).nextDouble(par.getMin(), par.getMax());
                 valueGenerated = true;
             }
             indexRand++;

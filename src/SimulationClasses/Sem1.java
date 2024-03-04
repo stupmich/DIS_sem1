@@ -62,13 +62,13 @@ public class Sem1 extends SimulationCore{
         double rocnaUrokovaSadzba;
 
         for (int fo : this.fixacneObdobia) {
-            rocnaUrokovaSadzba = generujRocnuUrokovuSadzbu(2024 + 10 - ostavajuceRoky, fo);
+            rocnaUrokovaSadzba = generujRocnuUrokovuSadzbu(2024 + 10 - ostavajuceRoky);
             double mesacnaUrokovaSadzba = rocnaUrokovaSadzba / 12.0;
             double mesacnaSplatka = vypocitajMesacnuSplatku(zostatokIstiny, mesacnaUrokovaSadzba, ostavajuceRoky);
             zostatokIstiny = vypocitajZostatokIstiny(zostatokIstiny, mesacnaUrokovaSadzba, ostavajuceRoky, fo);
             ostavajuceRoky -= fo;
 
-            this.splatka += mesacnaSplatka * 12 * fo;
+            this.splatka += mesacnaSplatka * 12.0 * fo;
         }
     }
 
@@ -78,33 +78,33 @@ public class Sem1 extends SimulationCore{
         this.result = this.splatka / this.executedReplications;
     }
 
-    private double generujRocnuUrokovuSadzbu(int rok, int fixacia) {
+    private double generujRocnuUrokovuSadzbu(int rok) {
         double urok = 0.0;
 
         if (rok >= 2024 && rok <= 2025) {
             urok = discreteUniformRand_2024_25.nextInt(1,5);
         } else if (rok >= 2026 && rok <= 2027) {
-            urok = 0.3 + (5 - 0.3) * continuousUniformRand_2026_2027.nextDouble();
+            urok = continuousUniformRand_2026_2027.nextDouble(0.3, 5);
         } else if (rok >= 2028 && rok <= 2029) {
             urok = continuousEmpiricalRand_2028_2029.generate();
         } else if (rok >= 2030 && rok <= 2031) {
             urok = deterministic_2030_2031;
         } else if (rok >= 2032 && rok <= 2033) {
-            urok = 0.9 + (2.2 - 0.9) * continuousUniformRand_2032_2033.nextDouble();
+            urok = continuousUniformRand_2032_2033.nextDouble(0.9, 2.2);
         }
 
         return urok / 100.0; // Prevedenie percent na desatinné číslo
     }
 
     private static double vypocitajMesacnuSplatku(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania) {
-        double delenec = istina * mesacnaUrokovaSadzba * Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania);
-        double delitel = Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania) - 1;
+        double delenec = istina * mesacnaUrokovaSadzba * Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania);
+        double delitel = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - 1.0;
         return delenec / delitel;
     }
 
     private static double vypocitajZostatokIstiny(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania, int pocetRokovSplatenych) {
-        double delenec = Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania) - Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplatenych);
-        double delitel = Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania) - 1;
+        double delenec = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplatenych);
+        double delitel = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - 1.0;
         return istina * delenec / delitel;
     }
 }
