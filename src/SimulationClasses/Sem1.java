@@ -6,16 +6,19 @@ import Generators.ContinuousEmpiricalDistributionParameter;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Sem1ScenarioA extends SimulationCore{
+public class Sem1 extends SimulationCore{
     private Random discreteUniformRand_2024_25;
     private Random continuousUniformRand_2026_2027;
     private ContinuousEmpiricalDistributionGenerator continuousEmpiricalRand_2028_2029;
     private static final double deterministic_2030_2031 = 1.3;
     private Random continuousUniformRand_2032_2033;
-
     private static final double vyskaUveru = 100000;
+    private double splatka = 0.0;
+    private int[] fixacneObdobia;
 
-    public Sem1ScenarioA(Random baseGen) {
+    public Sem1(Random baseGen, int[] fixacneObdobia) {
+        this.fixacneObdobia = fixacneObdobia;
+
         discreteUniformRand_2024_25 = new Random(baseGen.nextInt());
         continuousUniformRand_2026_2027 = new Random(baseGen.nextInt());
 
@@ -57,21 +60,22 @@ public class Sem1ScenarioA extends SimulationCore{
         double zostatokIstiny = vyskaUveru;
         int ostavajuceRoky = 10;
         double rocnaUrokovaSadzba;
-        int[] fixacneObdobia = {5, 3, 1, 1};
 
-        for (int fo : fixacneObdobia) {
+        for (int fo : this.fixacneObdobia) {
             rocnaUrokovaSadzba = generujRocnuUrokovuSadzbu(2024 + 10 - ostavajuceRoky, fo);
-            double mesacnaUrokovaSadzba = rocnaUrokovaSadzba / 12;
-            double mesacnaSplatka = calculateMonthlyPayment(remainingLoan, monthlyInterestRate, remainingYears);
-            System.out.println("Fixačné obdobie: " + fixationPeriod + " rokov, Mesačná splátka: " + monthlyPayment);
-            remainingLoan = calculateRemainingLoan(remainingLoan, monthlyInterestRate, remainingYears, fixationPeriod);
-            remainingYears -= fixationPeriod;
+            double mesacnaUrokovaSadzba = rocnaUrokovaSadzba / 12.0;
+            double mesacnaSplatka = vypocitajMesacnuSplatku(zostatokIstiny, mesacnaUrokovaSadzba, ostavajuceRoky);
+            zostatokIstiny = vypocitajZostatokIstiny(zostatokIstiny, mesacnaUrokovaSadzba, ostavajuceRoky, fo);
+            ostavajuceRoky -= fo;
+
+            this.splatka += mesacnaSplatka * 12 * fo;
         }
     }
 
     @Override
     public void afterOneReplication() {
-
+        this.executedReplications++;
+        this.result = this.splatka / this.executedReplications;
     }
 
     private double generujRocnuUrokovuSadzbu(int rok, int fixacia) {
@@ -89,13 +93,18 @@ public class Sem1ScenarioA extends SimulationCore{
             urok = 0.9 + (2.2 - 0.9) * continuousUniformRand_2032_2033.nextDouble();
         }
 
-        return urok / 100; // Prevedenie percent na desatinné číslo
+        return urok / 100.0; // Prevedenie percent na desatinné číslo
     }
 
     private static double vypocitajMesacnuSplatku(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania) {
-        double n = years * 12;
-        double numerator = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, n);
-        double denominator = Math.pow(1 + monthlyInterestRate, n) - 1;
-        return numerator / denominator;
+        double delenec = istina * mesacnaUrokovaSadzba * Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania);
+        double delitel = Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania) - 1;
+        return delenec / delitel;
+    }
+
+    private static double vypocitajZostatokIstiny(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania, int pocetRokovSplatenych) {
+        double delenec = Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania) - Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplatenych);
+        double delitel = Math.pow(1 + mesacnaUrokovaSadzba, 12 * pocetRokovSplacania) - 1;
+        return istina * delenec / delitel;
     }
 }

@@ -38,9 +38,10 @@ public abstract  class SimulationCore {
 
             if (executedReplications % (numberOfReplications * 0.0001) == 0 && series != null && chart != null) {
                 series.add(executedReplications, result);
-                chart.fireChartChanged();
+                //chart.fireChartChanged();
             }
         }
+        System.out.println("vysledok" + result);
     }
 
     public abstract void executeOneReplication();
