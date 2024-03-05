@@ -13,28 +13,28 @@ public abstract  class SimulationCore {
     protected double result = 0.0;
     protected ArrayList<ISimDelegate> delegates;
 
-    public void executeReplications(int numberOfReplications, XYSeries series, JFreeChart chart, MutableDouble mutResult, MutableDouble mutExecRepl) {
+    public void executeReplications(int numberOfReplications, XYSeries series, JFreeChart chart) {
         beforeReplications(series);
         for (int i = 0; i < numberOfReplications; i++) {
             if (!isRunning) {
                 result = 0.0;
                 executedReplications = 0;
-                if (mutExecRepl != null) {
-                    mutExecRepl.setValue(executedReplications);
-                }
+//                if (mutExecRepl != null) {
+//                    mutExecRepl.setValue(executedReplications);
+//                }
 
                 break;
             }
             executeOneReplication();
             afterOneReplication();
 
-            if (mutResult != null) {
-                mutResult.setValue(result);
-            }
-
-            if (mutExecRepl != null) {
-                mutExecRepl.setValue(executedReplications);
-            }
+//            if (mutResult != null) {
+//                mutResult.setValue(result);
+//            }
+//
+//            if (mutExecRepl != null) {
+//                mutExecRepl.setValue(executedReplications);
+//            }
 
             if (executedReplications % (numberOfReplications * 0.0001) == 0 && series != null && chart != null) {
                 series.add(executedReplications, result);
@@ -81,4 +81,7 @@ public abstract  class SimulationCore {
         return executedReplications;
     }
 
+    public double getResult() {
+        return result;
+    }
 }
