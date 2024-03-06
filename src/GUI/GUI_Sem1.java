@@ -1,6 +1,5 @@
 package GUI;
 
-import HelperClasses.MutableDouble;
 import Observer.ISimDelegate;
 import SimulationClasses.Sem1;
 import SimulationClasses.SimulationCore;
@@ -8,7 +7,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
@@ -17,13 +15,10 @@ import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, ChangeListener {
     private JPanel mainPanel;
@@ -39,6 +34,10 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     private JLabel labelPaidA;
     private JPanel panelStratA;
     private JTabbedPane tabbedPane2;
+    private JLabel labelRepA;
+    private JLabel labelRepB;
+    private JLabel labelRepC;
+    private JTextField textFieldPercReplications;
 
     private XYSeries series1 = new XYSeries("Priemerna suma");
     private XYPlot plot1;
@@ -63,12 +62,6 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     private Sem1 sem1B;
     private Sem1 sem1C;
     private boolean isRunning = false;
-    private MutableDouble mutableResultA;
-    private MutableDouble mutableExecRepA;
-    private MutableDouble mutableResultB;
-    private MutableDouble mutableExecRepB;
-    private MutableDouble mutableResultC;
-    private MutableDouble mutableExecRepC;
 
     public GUI_Sem1(){
         this.setContentPane(mainPanel);
@@ -78,7 +71,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.buttonEnd.addActionListener(this);
-        this.buttonPause.addActionListener(this);
+        //this.buttonPause.addActionListener(this);
         this.buttonStart.addActionListener(this);
 
         chart1 = ChartFactory.createXYLineChart("Zaplatená suma stratégia A",
@@ -152,11 +145,21 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             sem1C.setRunning(true);
             sem1C.registerDelegate(this);
 
+            sem1A.setExecutedReplications(0);
+            sem1B.setExecutedReplications(0);
+            sem1C.setExecutedReplications(0);
+
             isRunning = true;
+
+            this.series1.clear();
+            this.series2.clear();
+            this.series3.clear();
 
             Thread threadSem1A = new Thread(new Runnable() {
                 public void run() {
                     sem1A.executeReplications(Integer.parseInt(textFieldReplications.getText()), series1, chart1);
+//                    series1.add(sem1A.getExecutedReplications(), sem1A.getResult());
+//                    chart1.fireChartChanged();
                 }
             });
             threadSem1A.start();
@@ -164,6 +167,8 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             Thread threadSem1B = new Thread(new Runnable() {
                 public void run() {
                     sem1B.executeReplications(Integer.parseInt(textFieldReplications.getText()), series2, chart2);
+//                    series2.add(sem1B.getExecutedReplications(), sem1B.getResult());
+//                    chart2.fireChartChanged();
                 }
             });
             threadSem1B.start();
@@ -171,6 +176,8 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             Thread threadSem1C = new Thread(new Runnable() {
                 public void run() {
                     sem1C.executeReplications(Integer.parseInt(textFieldReplications.getText()), series3, chart3);
+//                    series3.add(sem1C.getExecutedReplications(), sem1C.getResult());
+//                    chart3.fireChartChanged();
                 }
             });
             threadSem1C.start();
@@ -181,11 +188,8 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             buttonEnd.setEnabled(false);
 
             sem1A.setRunning(false);
-            sem1A.setExecutedReplications(0);
             sem1B.setRunning(false);
-            sem1B.setExecutedReplications(0);
             sem1C.setRunning(false);
-            sem1C.setExecutedReplications(0);
 
             isRunning = false;
         }
@@ -193,9 +197,27 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
     @Override
     public void refresh(SimulationCore simulation) {
-        this.labelPaidA.setText("Priemerná zaplatená suma za 10 rokov: " + Double.toString(sem1A.getResult()));
-        this.labelPaidB.setText("Priemerná zaplatená suma za 10 rokov: " + Double.toString(sem1B.getResult()));
-        this.labelPaidC.setText("Priemerná zaplatená suma za 10 rokov: " + Double.toString(sem1C.getResult()));
+        if (isRunning) {
+            this.labelPaidA.setText(Double.toString(sem1A.getResult()));
+            this.labelPaidB.setText(Double.toString(sem1B.getResult()));
+            this.labelPaidC.setText(Double.toString(sem1C.getResult()));
+
+            this.labelRepA.setText(Integer.toString(sem1A.getExecutedReplications()));
+            this.labelRepB.setText(Integer.toString(sem1B.getExecutedReplications()));
+            this.labelRepC.setText(Integer.toString(sem1C.getExecutedReplications()));
+
+            XYPlot plot1 = chart1.getXYPlot();
+            NumberAxis domainAxis1 = (NumberAxis) plot1.getDomainAxis();
+            domainAxis1.setFixedAutoRange(sem1A.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
+
+            XYPlot plot2 = chart2.getXYPlot();
+            NumberAxis domainAxis2 = (NumberAxis) plot2.getDomainAxis();
+            domainAxis2.setFixedAutoRange(sem1B.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
+
+            XYPlot plot3 = chart3.getXYPlot();
+            NumberAxis domainAxis3 = (NumberAxis) plot3.getDomainAxis();
+            domainAxis3.setFixedAutoRange(sem1C.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
+        }
     }
 
     @Override

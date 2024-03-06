@@ -75,14 +75,13 @@ public class Sem1 extends SimulationCore{
 
             this.splatka += mesacnaSplatka * 12.0 * fo;
         }
-
-        this.refreshGUI();
     }
 
     @Override
     public void afterOneReplication() {
         this.executedReplications++;
         this.result = this.splatka / this.executedReplications;
+        this.refreshGUI();
     }
 
     private double generujRocnuUrokovuSadzbu(int rok) {

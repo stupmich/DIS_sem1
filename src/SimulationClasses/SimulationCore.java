@@ -15,37 +15,30 @@ public abstract  class SimulationCore {
 
     public void executeReplications(int numberOfReplications, XYSeries series, JFreeChart chart) {
         beforeReplications(series);
+        int count = 0;
         for (int i = 0; i < numberOfReplications; i++) {
             if (!isRunning) {
-                result = 0.0;
-                executedReplications = 0;
-//                if (mutExecRepl != null) {
-//                    mutExecRepl.setValue(executedReplications);
-//                }
-
                 break;
             }
             executeOneReplication();
             afterOneReplication();
 
-//            if (mutResult != null) {
-//                mutResult.setValue(result);
-//            }
-//
-//            if (mutExecRepl != null) {
-//                mutExecRepl.setValue(executedReplications);
-//            }
-
             if (executedReplications % (numberOfReplications * 0.0001) == 0 && series != null && chart != null) {
                 series.add(executedReplications, result);
-                //chart.fireChartChanged();
+                count++;
+                chart.fireChartChanged();
             }
         }
-        System.out.println("vysledok" + result);
+        System.out.println(count);
+        System.out.println("vysledok " + result);
     }
 
     public abstract void executeOneReplication();
+
     public void beforeReplications(XYSeries series) {
+        result = 0.0;
+        executedReplications = 0;
+
         if (series != null) {
             series.clear();
         }
