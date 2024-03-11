@@ -157,7 +157,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
             Thread threadSem1A = new Thread(new Runnable() {
                 public void run() {
-                    sem1A.executeReplications(Integer.parseInt(textFieldReplications.getText()), series1, chart1);
+                    sem1A.executeReplications(Integer.parseInt(textFieldReplications.getText()));
 //                    series1.add(sem1A.getExecutedReplications(), sem1A.getResult());
 //                    chart1.fireChartChanged();
                 }
@@ -166,7 +166,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
             Thread threadSem1B = new Thread(new Runnable() {
                 public void run() {
-                    sem1B.executeReplications(Integer.parseInt(textFieldReplications.getText()), series2, chart2);
+                    sem1B.executeReplications(Integer.parseInt(textFieldReplications.getText()));
 //                    series2.add(sem1B.getExecutedReplications(), sem1B.getResult());
 //                    chart2.fireChartChanged();
                 }
@@ -175,7 +175,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
             Thread threadSem1C = new Thread(new Runnable() {
                 public void run() {
-                    sem1C.executeReplications(Integer.parseInt(textFieldReplications.getText()), series3, chart3);
+                    sem1C.executeReplications(Integer.parseInt(textFieldReplications.getText()));
 //                    series3.add(sem1C.getExecutedReplications(), sem1C.getResult());
 //                    chart3.fireChartChanged();
                 }
@@ -196,8 +196,24 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     }
 
     @Override
-    public void refresh(SimulationCore simulation) {
+    public void refresh() {
         if (isRunning) {
+            // TODO prerobit na pocet bodov z gui parametra
+            if (sem1A.getExecutedReplications() % (100) == 0 && series1 != null && chart1 != null) {
+                series1.add(sem1A.getExecutedReplications(), sem1A.getResult());
+                chart1.fireChartChanged();
+            }
+
+            if (sem1B.getExecutedReplications() % (100) == 0 && series2 != null && chart2 != null) {
+                series2.add(sem1B.getExecutedReplications(), sem1B.getResult());
+                chart2.fireChartChanged();
+            }
+
+            if (sem1C.getExecutedReplications() % (100) == 0 && series3 != null && chart3 != null) {
+                series3.add(sem1C.getExecutedReplications(), sem1C.getResult());
+                chart3.fireChartChanged();
+            }
+
             this.labelPaidA.setText(Double.toString(sem1A.getResult()));
             this.labelPaidB.setText(Double.toString(sem1B.getResult()));
             this.labelPaidC.setText(Double.toString(sem1C.getResult()));

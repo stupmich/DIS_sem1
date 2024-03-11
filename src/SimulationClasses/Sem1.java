@@ -27,21 +27,6 @@ public class Sem1 extends SimulationCore{
         discreteUniformRand_2024_25 = new Random(baseGen.nextInt());
         continuousUniformRand_2026_2027 = new Random(baseGen.nextInt());
 
-        Random probabilityRand= new Random(baseGen.nextInt());
-        ArrayList<Random> valueRandList = new ArrayList<Random>();
-        Random valueRand1 = new Random(baseGen.nextInt());
-        Random valueRand2 = new Random(baseGen.nextInt());
-        Random valueRand3 = new Random(baseGen.nextInt());
-        Random valueRand4 = new Random(baseGen.nextInt());
-        Random valueRand5 = new Random(baseGen.nextInt());
-        Random valueRand6 = new Random(baseGen.nextInt());
-        valueRandList.add(valueRand1);
-        valueRandList.add(valueRand2);
-        valueRandList.add(valueRand3);
-        valueRandList.add(valueRand4);
-        valueRandList.add(valueRand5);
-        valueRandList.add(valueRand6);
-
         ArrayList<ContinuousEmpiricalDistributionParameter> parameterArrayList = new ArrayList<ContinuousEmpiricalDistributionParameter>();
         ContinuousEmpiricalDistributionParameter p1 = new ContinuousEmpiricalDistributionParameter(0.1,0.3,0.1);
         ContinuousEmpiricalDistributionParameter p2 = new ContinuousEmpiricalDistributionParameter(0.3,0.8,0.35);
@@ -55,7 +40,7 @@ public class Sem1 extends SimulationCore{
         parameterArrayList.add(p4);
         parameterArrayList.add(p5);
         parameterArrayList.add(p6);
-        continuousEmpiricalRand_2028_2029 = new ContinuousEmpiricalDistributionGenerator(probabilityRand, valueRandList, parameterArrayList);
+        continuousEmpiricalRand_2028_2029 = new ContinuousEmpiricalDistributionGenerator(baseGen, parameterArrayList);
 
         continuousUniformRand_2032_2033 = new Random(baseGen.nextInt());
     }
@@ -83,7 +68,6 @@ public class Sem1 extends SimulationCore{
         this.result = this.splatka / this.executedReplications;
         this.refreshGUI();
     }
-
     private double generujRocnuUrokovuSadzbu(int rok) {
         double urok = 0.0;
 
