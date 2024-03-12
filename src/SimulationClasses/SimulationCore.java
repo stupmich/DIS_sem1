@@ -23,6 +23,7 @@ public abstract  class SimulationCore {
             executeOneReplication();
             afterOneReplication();
         }
+        this.isRunning = false;
         System.out.println("vysledok " + result);
     }
 

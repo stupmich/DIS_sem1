@@ -158,8 +158,6 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             Thread threadSem1A = new Thread(new Runnable() {
                 public void run() {
                     sem1A.executeReplications(Integer.parseInt(textFieldReplications.getText()));
-//                    series1.add(sem1A.getExecutedReplications(), sem1A.getResult());
-//                    chart1.fireChartChanged();
                 }
             });
             threadSem1A.start();
@@ -167,8 +165,6 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             Thread threadSem1B = new Thread(new Runnable() {
                 public void run() {
                     sem1B.executeReplications(Integer.parseInt(textFieldReplications.getText()));
-//                    series2.add(sem1B.getExecutedReplications(), sem1B.getResult());
-//                    chart2.fireChartChanged();
                 }
             });
             threadSem1B.start();
@@ -176,8 +172,6 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             Thread threadSem1C = new Thread(new Runnable() {
                 public void run() {
                     sem1C.executeReplications(Integer.parseInt(textFieldReplications.getText()));
-//                    series3.add(sem1C.getExecutedReplications(), sem1C.getResult());
-//                    chart3.fireChartChanged();
                 }
             });
             threadSem1C.start();
@@ -199,40 +193,58 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     public void refresh() {
         if (isRunning) {
             // TODO prerobit na pocet bodov z gui parametra
-            if (sem1A.getExecutedReplications() % (100) == 0 && series1 != null && chart1 != null) {
+            int replicationCount = Integer.parseInt(textFieldReplications.getText());
+            int updateFrequency;
+
+            if (replicationCount <= 100) {
+                updateFrequency = 1;
+            } else if (replicationCount <= 1000) {
+                updateFrequency = 10;
+            } else if (replicationCount <= 10000) {
+                updateFrequency = 100;
+            } else if (replicationCount <= 100000) {
+                updateFrequency = 1000;
+            } else if (replicationCount <= 1000000) {
+                updateFrequency = 10000;
+            } else {
+                updateFrequency = 100000;
+            }
+
+            if (sem1A.isRunning() && sem1A.getExecutedReplications() % (updateFrequency) == 0 && series1 != null && chart1 != null) {
+                this.labelPaidA.setText(Double.toString(sem1A.getResult()));
+                this.labelRepA.setText(Integer.toString(sem1A.getExecutedReplications()));
+
                 series1.add(sem1A.getExecutedReplications(), sem1A.getResult());
                 chart1.fireChartChanged();
+
+                XYPlot plot1 = chart1.getXYPlot();
+                NumberAxis domainAxis1 = (NumberAxis) plot1.getDomainAxis();
+                domainAxis1.setFixedAutoRange(sem1A.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
             }
 
-            if (sem1B.getExecutedReplications() % (100) == 0 && series2 != null && chart2 != null) {
+            if (sem1B.isRunning() && sem1B.getExecutedReplications() % (updateFrequency) == 0 && series2 != null && chart2 != null) {
+                this.labelPaidB.setText(Double.toString(sem1B.getResult()));
+                this.labelRepB.setText(Integer.toString(sem1B.getExecutedReplications()));
+
                 series2.add(sem1B.getExecutedReplications(), sem1B.getResult());
                 chart2.fireChartChanged();
+
+                XYPlot plot2 = chart2.getXYPlot();
+                NumberAxis domainAxis2 = (NumberAxis) plot2.getDomainAxis();
+                domainAxis2.setFixedAutoRange(sem1B.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
             }
 
-            if (sem1C.getExecutedReplications() % (100) == 0 && series3 != null && chart3 != null) {
+            if (sem1C.isRunning() && sem1C.getExecutedReplications() % (updateFrequency) == 0 && series3 != null && chart3 != null) {
+                this.labelPaidC.setText(Double.toString(sem1C.getResult()));
+                this.labelRepC.setText(Integer.toString(sem1C.getExecutedReplications()));
+
                 series3.add(sem1C.getExecutedReplications(), sem1C.getResult());
                 chart3.fireChartChanged();
+
+                XYPlot plot3 = chart3.getXYPlot();
+                NumberAxis domainAxis3 = (NumberAxis) plot3.getDomainAxis();
+                domainAxis3.setFixedAutoRange(sem1C.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
             }
-
-            this.labelPaidA.setText(Double.toString(sem1A.getResult()));
-            this.labelPaidB.setText(Double.toString(sem1B.getResult()));
-            this.labelPaidC.setText(Double.toString(sem1C.getResult()));
-
-            this.labelRepA.setText(Integer.toString(sem1A.getExecutedReplications()));
-            this.labelRepB.setText(Integer.toString(sem1B.getExecutedReplications()));
-            this.labelRepC.setText(Integer.toString(sem1C.getExecutedReplications()));
-
-            XYPlot plot1 = chart1.getXYPlot();
-            NumberAxis domainAxis1 = (NumberAxis) plot1.getDomainAxis();
-            domainAxis1.setFixedAutoRange(sem1A.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
-
-            XYPlot plot2 = chart2.getXYPlot();
-            NumberAxis domainAxis2 = (NumberAxis) plot2.getDomainAxis();
-            domainAxis2.setFixedAutoRange(sem1B.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
-
-            XYPlot plot3 = chart3.getXYPlot();
-            NumberAxis domainAxis3 = (NumberAxis) plot3.getDomainAxis();
-            domainAxis3.setFixedAutoRange(sem1C.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
         }
     }
 
