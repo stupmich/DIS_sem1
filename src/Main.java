@@ -1,12 +1,4 @@
 import GUI.GUI_Sem1;
-import Generators.ContinuousEmpiricalDistributionGenerator;
-import Generators.ContinuousEmpiricalDistributionParameter;
-import SimulationClasses.Sem1;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,17 +7,14 @@ public class Main {
 //        Random baseGen = new Random(1);
 //        Sem1 simA = new Sem1(baseGen, new int[]{5, 3, 1, 1});
 //        simA.setRunning(true);
-//        simA.executeReplications(10000000, null,null);
-
+//        simA.executeReplications(100000000);
+//
 //        Sem1 simB = new Sem1(baseGen, new int[]{3, 3, 3, 1});
 //        simB.setRunning(true);
-//        simB.executeReplications(10000000, null,null);
+//        simB.executeReplications(100000000);
 //
 //        Sem1 simC = new Sem1(baseGen, new int[]{3, 1, 5, 1});
 //        simC.setRunning(true);
-//        simC.executeReplications(10000000, null,null);
-
-//        testEmpiricalDist();
-
+//        simC.executeReplications(100000000);
     }
 }

@@ -1,11 +1,7 @@
 package SimulationClasses;
 
 import Observer.ISimDelegate;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.xy.XYSeries;
-
 import java.util.ArrayList;
-import java.util.function.ToDoubleBiFunction;
 
 public abstract  class SimulationCore {
     protected int executedReplications = 0;
@@ -24,7 +20,8 @@ public abstract  class SimulationCore {
             afterOneReplication();
         }
         this.isRunning = false;
-        System.out.println("vysledok " + result);
+        this.refreshGUI();
+        //System.out.println("vysledok " + result);
     }
 
     public abstract void executeOneReplication();
@@ -36,7 +33,7 @@ public abstract  class SimulationCore {
     public abstract void afterOneReplication();
 
     public void setRunning(boolean running) {
-        isRunning = running;
+        this.isRunning = running;
     }
 
     public void setExecutedReplications(int executedReplications) {

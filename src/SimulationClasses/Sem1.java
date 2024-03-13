@@ -3,9 +3,6 @@ package SimulationClasses;
 import Generators.ContinuousEmpiricalDistributionGenerator;
 import Generators.ContinuousEmpiricalDistributionParameter;
 import Observer.ISimDelegate;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,13 +16,13 @@ public class Sem1 extends SimulationCore{
     private double splatka = 0.0;
     private int[] fixacneObdobia;
 
-    public Sem1(Random baseGen, int[] fixacneObdobia) {
+    public Sem1(Random seedGen, int[] fixacneObdobia) {
         this.delegates = new ArrayList<ISimDelegate>();
 
         this.fixacneObdobia = fixacneObdobia;
 
-        discreteUniformRand_2024_25 = new Random(baseGen.nextInt());
-        continuousUniformRand_2026_2027 = new Random(baseGen.nextInt());
+        discreteUniformRand_2024_25 = new Random(seedGen.nextInt());
+        continuousUniformRand_2026_2027 = new Random(seedGen.nextInt());
 
         ArrayList<ContinuousEmpiricalDistributionParameter> parameterArrayList = new ArrayList<ContinuousEmpiricalDistributionParameter>();
         ContinuousEmpiricalDistributionParameter p1 = new ContinuousEmpiricalDistributionParameter(0.1,0.3,0.1);
@@ -40,9 +37,9 @@ public class Sem1 extends SimulationCore{
         parameterArrayList.add(p4);
         parameterArrayList.add(p5);
         parameterArrayList.add(p6);
-        continuousEmpiricalRand_2028_2029 = new ContinuousEmpiricalDistributionGenerator(baseGen, parameterArrayList);
+        continuousEmpiricalRand_2028_2029 = new ContinuousEmpiricalDistributionGenerator(seedGen, parameterArrayList);
 
-        continuousUniformRand_2032_2033 = new Random(baseGen.nextInt());
+        continuousUniformRand_2032_2033 = new Random(seedGen.nextInt());
     }
 
     @Override
@@ -97,71 +94,4 @@ public class Sem1 extends SimulationCore{
         double delitel = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - 1.0;
         return istina * delenec / delitel;
     }
-
-//    public void executeOneReplication() {
-//        BigDecimal vyskaUveruBD = new BigDecimal(String.valueOf(vyskaUveru)); // Convert loan amount to BigDecimal
-//        int ostavajuceRoky = 10;
-//        BigDecimal rocnaUrokovaSadzbaBD;
-//
-//        BigDecimal splatkaBD = BigDecimal.ZERO; // Initialize splatka as BigDecimal
-//
-//        for (int fo : this.fixacneObdobia) {
-//            rocnaUrokovaSadzbaBD = generujRocnuUrokovuSadzbu(2024 + 10 - ostavajuceRoky); // Assume this method is adjusted to return BigDecimal
-//            BigDecimal mesacnaUrokovaSadzbaBD = rocnaUrokovaSadzbaBD.divide(BigDecimal.valueOf(12), 8, RoundingMode.HALF_UP);
-//
-//            BigDecimal mesacnaSplatkaBD = vypocitajMesacnuSplatku(vyskaUveruBD, mesacnaUrokovaSadzbaBD, ostavajuceRoky);
-//            vyskaUveruBD = vypocitajZostatokIstiny(vyskaUveruBD, mesacnaUrokovaSadzbaBD, ostavajuceRoky, fo);
-//            ostavajuceRoky -= fo;
-//
-//            BigDecimal monthlyPaymentsTotal = mesacnaSplatkaBD.multiply(BigDecimal.valueOf(12)).multiply(BigDecimal.valueOf(fo));
-//            splatkaBD = splatkaBD.add(monthlyPaymentsTotal);
-//        }
-//
-//        this.splatka += splatkaBD.doubleValue(); // Convert final splatka back to double if necessary
-//    }
-
-//    private BigDecimal generujRocnuUrokovuSadzbu(int rok) {
-//        double urok = 0.0;
-//        BigDecimal urokBD;
-//
-//        if (rok >= 2024 && rok <= 2025) {
-//            urok = discreteUniformRand_2024_25.nextInt(1,5);
-//        } else if (rok >= 2026 && rok <= 2027) {
-//            urok = continuousUniformRand_2026_2027.nextDouble(0.3, 5.0);
-//        } else if (rok >= 2028 && rok <= 2029) {
-//            urok = continuousEmpiricalRand_2028_2029.generate();
-//        } else if (rok >= 2030 && rok <= 2031) {
-//            urok = deterministic_2030_2031;
-//        } else if (rok >= 2032 && rok <= 2033) {
-//            urok = continuousUniformRand_2032_2033.nextDouble(0.9, 2.2);
-//        }
-//        urokBD = BigDecimal.valueOf(urok);
-//        urokBD = urokBD.divide(BigDecimal.valueOf(100), 8, RoundingMode.HALF_UP);
-//
-//        return urokBD;
-//        //return urok / 100.0; // Prevedenie percent na desatinné číslo
-//    }
-
-//private static BigDecimal vypocitajMesacnuSplatku(BigDecimal istina, BigDecimal mesacnaUrokovaSadzba, int pocetRokovSplacania) {
-//    BigDecimal twelve = new BigDecimal("12");
-//    BigDecimal onePlusR = mesacnaUrokovaSadzba.add(BigDecimal.ONE);
-//    BigDecimal n = new BigDecimal(pocetRokovSplacania).multiply(twelve);
-//
-//    BigDecimal numerator = istina.multiply(mesacnaUrokovaSadzba).multiply(onePlusR.pow(n.intValueExact()));
-//    BigDecimal denominator = onePlusR.pow(n.intValueExact()).subtract(BigDecimal.ONE);
-//
-//    return numerator.divide(denominator, 8, RoundingMode.HALF_UP);
-//}
-//
-//    private static BigDecimal vypocitajZostatokIstiny(BigDecimal istina, BigDecimal mesacnaUrokovaSadzba, int pocetRokovSplacania, int pocetRokovSplatenych) {
-//        BigDecimal twelve = new BigDecimal("12");
-//        BigDecimal onePlusR = mesacnaUrokovaSadzba.add(BigDecimal.ONE);
-//        BigDecimal n = new BigDecimal(pocetRokovSplacania).multiply(twelve);
-//        BigDecimal m = new BigDecimal(pocetRokovSplatenych).multiply(twelve);
-//
-//        BigDecimal numerator = onePlusR.pow(n.intValueExact()).subtract(onePlusR.pow(m.intValueExact()));
-//        BigDecimal denominator = onePlusR.pow(n.intValueExact()).subtract(BigDecimal.ONE);
-//
-//        return istina.multiply(numerator).divide(denominator, 8, RoundingMode.HALF_UP);
-//    }
 }

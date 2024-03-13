@@ -2,7 +2,6 @@ package GUI;
 
 import Observer.ISimDelegate;
 import SimulationClasses.Sem1;
-import SimulationClasses.SimulationCore;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -23,7 +22,8 @@ import java.util.Random;
 public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, ChangeListener {
     private JPanel mainPanel;
     private JTextField textFieldReplications;
-    private JButton buttonPause;
+    private JTabbedPane tabbedPane2;
+    private JPanel panelStratA;
     private JButton buttonEnd;
     private JButton buttonStart;
     private JPanel panelGraphB;
@@ -32,12 +32,11 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     private JLabel labelPaidC;
     private JLabel labelPaidB;
     private JLabel labelPaidA;
-    private JPanel panelStratA;
-    private JTabbedPane tabbedPane2;
     private JLabel labelRepA;
     private JLabel labelRepB;
     private JLabel labelRepC;
     private JTextField textFieldPercReplications;
+    private JTextField textFieldSeed;
 
     private XYSeries series1 = new XYSeries("Priemerna suma");
     private XYPlot plot1;
@@ -56,22 +55,22 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     private XYSeriesCollection dataset3 = new XYSeriesCollection(series3);
     private JFreeChart chart3;
     private ChartPanel chartPanel3;
-
-    private Random baseGen;
+    private Random seedGen;
     private Sem1 sem1A;
     private Sem1 sem1B;
     private Sem1 sem1C;
     private boolean isRunning = false;
-
-    public GUI_Sem1(){
+    private int replicationCount;
+    private int updateFrequency;
+    
+    public GUI_Sem1() {
         this.setContentPane(mainPanel);
         this.setTitle("Simulácia hypoteka");
-        this.setSize(1366,768);
+        this.setSize(1920, 1080);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.buttonEnd.addActionListener(this);
-        //this.buttonPause.addActionListener(this);
         this.buttonStart.addActionListener(this);
 
         chart1 = ChartFactory.createXYLineChart("Zaplatená suma stratégia A",
@@ -124,16 +123,20 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
         this.panelGraphC.setLayout(new BorderLayout());
         this.panelGraphC.add(chartPanel3, BorderLayout.CENTER);
         this.panelGraphC.validate();
-
-        baseGen = new Random();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttonStart) {
-            sem1A = new Sem1(baseGen, new int[]{5, 3, 1, 1});
-            sem1B = new Sem1(baseGen, new int[]{3, 3, 3, 1});
-            sem1C = new Sem1(baseGen, new int[]{3, 1, 5, 1});
+            if (this.textFieldSeed.getText().isEmpty()) {
+                seedGen = new Random();
+            } else {
+                seedGen = new Random(Integer.parseInt(this.textFieldSeed.getText()));
+            }
+
+            sem1A = new Sem1(seedGen, new int[]{5, 3, 1, 1});
+            sem1B = new Sem1(seedGen, new int[]{3, 3, 3, 1});
+            sem1C = new Sem1(seedGen, new int[]{3, 1, 5, 1});
 
             buttonStart.setEnabled(false);
             buttonEnd.setEnabled(true);
@@ -154,6 +157,22 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
             this.series1.clear();
             this.series2.clear();
             this.series3.clear();
+
+            this.replicationCount = Integer.parseInt(textFieldReplications.getText());
+
+            if (replicationCount <= 100) {
+                this.updateFrequency = 1;
+            } else if (replicationCount <= 1000) {
+                this.updateFrequency = 10;
+            } else if (replicationCount <= 10000) {
+                this.updateFrequency = 100;
+            } else if (replicationCount <= 100000) {
+                this.updateFrequency = 1000;
+            } else if (replicationCount <= 1000000) {
+                this.updateFrequency = 10000;
+            } else {
+                this.updateFrequency = 100000;
+            }
 
             Thread threadSem1A = new Thread(new Runnable() {
                 public void run() {
@@ -192,59 +211,29 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
     @Override
     public void refresh() {
         if (isRunning) {
-            // TODO prerobit na pocet bodov z gui parametra
-            int replicationCount = Integer.parseInt(textFieldReplications.getText());
-            int updateFrequency;
+            this.updateChartAndLabels(sem1A, series1, chart1, labelPaidA, labelRepA, updateFrequency, textFieldPercReplications);
+            this.updateChartAndLabels(sem1B, series2, chart2, labelPaidB, labelRepB, updateFrequency, textFieldPercReplications);
+            this.updateChartAndLabels(sem1C, series3, chart3, labelPaidC, labelRepC, updateFrequency, textFieldPercReplications);
 
-            if (replicationCount <= 100) {
-                updateFrequency = 1;
-            } else if (replicationCount <= 1000) {
-                updateFrequency = 10;
-            } else if (replicationCount <= 10000) {
-                updateFrequency = 100;
-            } else if (replicationCount <= 100000) {
-                updateFrequency = 1000;
-            } else if (replicationCount <= 1000000) {
-                updateFrequency = 10000;
-            } else {
-                updateFrequency = 100000;
+            if (sem1A.isRunning() == false & sem1B.isRunning() == false && sem1C.isRunning() == false) {
+                this.isRunning = false;
+                this.buttonStart.setEnabled(true);
+                this.buttonEnd.setEnabled(false);
             }
+        }
+    }
 
-            if (sem1A.isRunning() && sem1A.getExecutedReplications() % (updateFrequency) == 0 && series1 != null && chart1 != null) {
-                this.labelPaidA.setText(Double.toString(sem1A.getResult()));
-                this.labelRepA.setText(Integer.toString(sem1A.getExecutedReplications()));
+    private void updateChartAndLabels(Sem1 sem, XYSeries series, JFreeChart chart, JLabel labelPaid, JLabel labelRep, double updateFrequency, JTextField textFieldPercReplications) {
+        if (sem.isRunning() && sem.getExecutedReplications() % updateFrequency == 0 && series != null && chart != null) {
+            labelPaid.setText(Double.toString(sem.getResult()));
+            labelRep.setText(Integer.toString(sem.getExecutedReplications()));
 
-                series1.add(sem1A.getExecutedReplications(), sem1A.getResult());
-                chart1.fireChartChanged();
+            series.add(sem.getExecutedReplications(), sem.getResult());
+            chart.fireChartChanged();
 
-                XYPlot plot1 = chart1.getXYPlot();
-                NumberAxis domainAxis1 = (NumberAxis) plot1.getDomainAxis();
-                domainAxis1.setFixedAutoRange(sem1A.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
-            }
-
-            if (sem1B.isRunning() && sem1B.getExecutedReplications() % (updateFrequency) == 0 && series2 != null && chart2 != null) {
-                this.labelPaidB.setText(Double.toString(sem1B.getResult()));
-                this.labelRepB.setText(Integer.toString(sem1B.getExecutedReplications()));
-
-                series2.add(sem1B.getExecutedReplications(), sem1B.getResult());
-                chart2.fireChartChanged();
-
-                XYPlot plot2 = chart2.getXYPlot();
-                NumberAxis domainAxis2 = (NumberAxis) plot2.getDomainAxis();
-                domainAxis2.setFixedAutoRange(sem1B.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
-            }
-
-            if (sem1C.isRunning() && sem1C.getExecutedReplications() % (updateFrequency) == 0 && series3 != null && chart3 != null) {
-                this.labelPaidC.setText(Double.toString(sem1C.getResult()));
-                this.labelRepC.setText(Integer.toString(sem1C.getExecutedReplications()));
-
-                series3.add(sem1C.getExecutedReplications(), sem1C.getResult());
-                chart3.fireChartChanged();
-
-                XYPlot plot3 = chart3.getXYPlot();
-                NumberAxis domainAxis3 = (NumberAxis) plot3.getDomainAxis();
-                domainAxis3.setFixedAutoRange(sem1C.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
-            }
+            XYPlot plot = chart.getXYPlot();
+            NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+            domainAxis.setFixedAutoRange(sem.getExecutedReplications() * (Double.parseDouble(textFieldPercReplications.getText()) / 100.0));
         }
     }
 
