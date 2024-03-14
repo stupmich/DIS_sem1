@@ -83,13 +83,13 @@ public class Sem1 extends SimulationCore{
         return urok / 100.0; // Prevedenie percent na desatinné číslo
     }
 
-    private static double vypocitajMesacnuSplatku(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania) {
+    private double vypocitajMesacnuSplatku(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania) {
         double delenec = istina * mesacnaUrokovaSadzba * Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania);
         double delitel = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - 1.0;
         return delenec / delitel;
     }
 
-    private static double vypocitajZostatokIstiny(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania, int pocetRokovSplatenych) {
+    private double vypocitajZostatokIstiny(double istina, double mesacnaUrokovaSadzba, int pocetRokovSplacania, int pocetRokovSplatenych) {
         double delenec = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplatenych);
         double delitel = Math.pow(1.0 + mesacnaUrokovaSadzba, 12.0 * pocetRokovSplacania) - 1.0;
         return istina * delenec / delitel;

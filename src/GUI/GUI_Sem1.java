@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, ChangeListener {
+public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate {
     private JPanel mainPanel;
     private JTextField textFieldReplications;
     private JTabbedPane tabbedPane2;
@@ -80,6 +80,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
         NumberAxis domainAxis = (NumberAxis) plot1.getDomainAxis();
         domainAxis.setAutoRange(true);
+        domainAxis.setVerticalTickLabels(true);
 
         NumberAxis rangeAxis = (NumberAxis) plot1.getRangeAxis();
         rangeAxis.setAutoRange(true);
@@ -97,6 +98,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
         NumberAxis domainAxis2 = (NumberAxis) plot2.getDomainAxis();
         domainAxis2.setAutoRange(true);
+        domainAxis2.setVerticalTickLabels(true);
 
         NumberAxis rangeAxis2 = (NumberAxis) plot2.getRangeAxis();
         rangeAxis2.setAutoRange(true);
@@ -114,6 +116,7 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
 
         NumberAxis domainAxis3 = (NumberAxis) plot3.getDomainAxis();
         domainAxis3.setAutoRange(true);
+        domainAxis3.setVerticalTickLabels(true);
 
         NumberAxis rangeAxis3 = (NumberAxis) plot3.getRangeAxis();
         rangeAxis3.setAutoRange(true);
@@ -237,8 +240,4 @@ public class GUI_Sem1 extends JFrame implements ActionListener, ISimDelegate, Ch
         }
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-
-    }
 }
