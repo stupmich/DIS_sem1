@@ -12,7 +12,7 @@ public class Sem1 extends SimulationCore{
     private ContinuousEmpiricalDistributionGenerator continuousEmpiricalRand_2028_2029;
     private static final double deterministic_2030_2031 = 1.3;
     private Random continuousUniformRand_2032_2033;
-    private static final double vyskaUveru = 100000;
+    private static final double vyskaUveru = 200000;
     private double splatka = 0.0;
     private int[] fixacneObdobia;
 
@@ -30,7 +30,7 @@ public class Sem1 extends SimulationCore{
         ContinuousEmpiricalDistributionParameter p3 = new ContinuousEmpiricalDistributionParameter(0.8,1.2,0.2);
         ContinuousEmpiricalDistributionParameter p4 = new ContinuousEmpiricalDistributionParameter(1.2,2.5,0.15);
         ContinuousEmpiricalDistributionParameter p5 = new ContinuousEmpiricalDistributionParameter(2.5,3.8,0.15);
-        ContinuousEmpiricalDistributionParameter p6 = new ContinuousEmpiricalDistributionParameter(3.8,4.8,0.05);
+        ContinuousEmpiricalDistributionParameter p6 = new ContinuousEmpiricalDistributionParameter(3.8,9.8,0.05);
         parameterArrayList.add(p1);
         parameterArrayList.add(p2);
         parameterArrayList.add(p3);

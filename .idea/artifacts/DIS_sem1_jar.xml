@@ -2,7 +2,7 @@
   <artifact type="jar" name="DIS_sem1:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/DIS_sem1_jar</output-path>
     <root id="archive" name="DIS_sem1.jar">
-      <element id="module-output" name="DIS_sem1" />
+      <element id="module-output" name="DIS_sem2" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfree/jfreechart/1.5.4/jfreechart-1.5.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/jfreechart-1.0.19/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/jfreechart-1.0.19/jfreechart-1.0.19/lib/servlet.jar" path-in-jar="/" />
