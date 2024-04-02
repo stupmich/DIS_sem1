@@ -24,10 +24,9 @@ public class ArrivalEvent extends Event {
         ((Sem2) core).incHighestCustomerID();
         ((Sem2) core).getAllCustomers().add(customer);
 
-        if (((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() >= ((Sem2) core).getNumOfPlacesInShop()) {
+        if (((Sem2) core).getCustomerInteractingWithTicketDispenser() != null || ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() >= ((Sem2) core).getNumOfPlacesInShop()) {
             ((Sem2) core).getQueueCustomersWaitingTicketDispenser().add(customer);
         } else {
-            //((Sem2) core).setCustomerInteractingWithTicketDispenser(customer);
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
             startInteraction.setCustomer(customer);
             core.addEvent(startInteraction);

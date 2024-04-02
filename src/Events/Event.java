@@ -4,7 +4,7 @@ import Entities.Customer;
 import Entities.Worker;
 import SimulationClasses.EventBasedSimulationCore;
 
-public abstract class Event {
+public abstract class Event implements Comparable<Event> {
     protected Customer customer;
     protected Worker worker;
     protected double time;

@@ -24,7 +24,8 @@ public class Sem2 extends EventBasedSimulationCore {
     
     private LinkedList<Worker> workersOrderNormal;
     private LinkedList<Worker> workersOrderOnline;
-    private LinkedList<Worker> workersOrderWorking;
+    private LinkedList<Worker> workersOrderWorkingNormal;
+    private LinkedList<Worker> workersOrderWorkingOnline;
     private LinkedList<Worker> workersPayment;
     private LinkedList<Worker> workersPaymentWorking;
 
@@ -63,7 +64,8 @@ public class Sem2 extends EventBasedSimulationCore {
 
         this.workersOrderNormal = new LinkedList<Worker>();
         this.workersOrderOnline = new LinkedList<Worker>();
-        this.workersOrderWorking = new LinkedList<Worker>();
+        this.workersOrderWorkingNormal = new LinkedList<Worker>();
+        this.workersOrderWorkingOnline = new LinkedList<Worker>();
         this.workersPayment = new LinkedList<Worker>();
         this.workersPaymentWorking = new LinkedList<Worker>();
 
@@ -144,6 +146,62 @@ public class Sem2 extends EventBasedSimulationCore {
     }
 
     @Override
+    public void afterOneReplication() {
+        super.afterOneReplication();
+        executedReplications++;
+        this.currentTime = 0.0;
+        highestCustomerID = 0;
+        highestWorkersOrderID = 0;
+        highestWorkersPaymentID = 0;
+
+        workersOrderNormal.clear();
+        workersOrderOnline.clear();
+        workersOrderWorkingNormal.clear();
+        workersOrderWorkingOnline.clear();
+        workersPayment.clear();
+        workersPaymentWorking.clear();
+
+        int numberOfNormalWorkers = (int) Math.round(this.numberOfWorkersOrder * 2 / 3.0);
+        int numberOfOnlineWorkers = this.numberOfWorkersOrder - numberOfNormalWorkers;
+
+        for (int i = 0; i < numberOfNormalWorkers; i++ ) {
+            Worker worker = new Worker(this.highestWorkersOrderID);
+            workersOrderNormal.add(worker);
+            this.highestWorkersOrderID++;
+        }
+        for (int i = 0; i < numberOfOnlineWorkers; i++ ) {
+            Worker worker = new Worker(this.highestWorkersOrderID);
+            workersOrderOnline.add(worker);
+            this.highestWorkersOrderID++;
+        }
+
+        for (int i = 0; i < this.numberOfWorkersPayment; i++ ) {
+            Worker worker = new Worker(this.highestWorkersPaymentID);
+            workersPayment.add(worker);
+            this.highestWorkersPaymentID++;
+        }
+
+        queueCustomersWaitingTicketDispenser.clear();
+        customerInteractingWithTicketDispenser = null;
+        customersWaitingInShopBeforeOrder.clear();
+        customersOrdering.clear();
+        for (LinkedList<Customer> queue : queuesCustomersWaitingForPayment) {
+            queue.clear();
+        }
+        customersPaying.clear();
+        allCustomers.clear();
+        timeLine.clear();
+
+
+        ArrivalEvent startEvent = new ArrivalEvent(0.0);
+        this.addEvent(startEvent);
+        if (!turboMode) {
+            SystemEvent nextSystemEvent = new SystemEvent(0.0, this.timeGap);
+            this.addEvent(nextSystemEvent);
+        }
+    }
+
+    @Override
     public void updateStatistics() {
 
     }
@@ -175,10 +233,6 @@ public class Sem2 extends EventBasedSimulationCore {
 
     public int getHighestWorkersPaymentID() {
         return highestWorkersPaymentID;
-    }
-
-    public LinkedList<Worker> getWorkersOrderWorking() {
-        return workersOrderWorking;
     }
 
     public LinkedList<Worker> getWorkersPayment() {
@@ -297,10 +351,6 @@ public class Sem2 extends EventBasedSimulationCore {
         this.highestWorkersPaymentID = highestWorkersPaymentID;
     }
 
-    public void setWorkersOrderWorking(LinkedList<Worker> workersOrderWorking) {
-        this.workersOrderWorking = workersOrderWorking;
-    }
-
     public void setWorkersPayment(LinkedList<Worker> workersPayment) {
         this.workersPayment = workersPayment;
     }
@@ -415,5 +465,21 @@ public class Sem2 extends EventBasedSimulationCore {
 
     public void setWorkersOrderOnline(LinkedList<Worker> workersOrderOnline) {
         this.workersOrderOnline = workersOrderOnline;
+    }
+
+    public LinkedList<Worker> getWorkersOrderWorkingNormal() {
+        return workersOrderWorkingNormal;
+    }
+
+    public void setWorkersOrderWorkingNormal(LinkedList<Worker> workersOrderWorkingNormal) {
+        this.workersOrderWorkingNormal = workersOrderWorkingNormal;
+    }
+
+    public LinkedList<Worker> getWorkersOrderWorkingOnline() {
+        return workersOrderWorkingOnline;
+    }
+
+    public void setWorkersOrderWorkingOnline(LinkedList<Worker> workersOrderWorkingOnline) {
+        this.workersOrderWorkingOnline = workersOrderWorkingOnline;
     }
 }

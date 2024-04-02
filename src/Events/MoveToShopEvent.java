@@ -29,6 +29,8 @@ public class MoveToShopEvent extends Event {
             }
         }
 
+        ((Sem2) core).setCustomerInteractingWithTicketDispenser(null);
+
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
             && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
                 StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);

@@ -80,17 +80,7 @@
                               <text value="100000"/>
                             </properties>
                           </component>
-                          <component id="a98fb" class="javax.swing.JTextField" binding="textFieldWorkers1">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                <preferred-size width="150" height="-1"/>
-                              </grid>
-                            </constraints>
-                            <properties>
-                              <text value="3"/>
-                            </properties>
-                          </component>
-                          <component id="e80b6" class="javax.swing.JTextField" binding="textFieldWorkers2">
+                          <component id="e80b6" class="javax.swing.JTextField" binding="textFieldOrderPlacesWatchTime">
                             <constraints>
                               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                 <preferred-size width="150" height="-1"/>
@@ -120,6 +110,16 @@
                             <clientProperties>
                               <Slider.paintThumbArrowShape class="java.lang.Boolean" value="false"/>
                             </clientProperties>
+                          </component>
+                          <component id="a98fb" class="javax.swing.JTextField" binding="textFieldCashWatchTime">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <text value="3"/>
+                            </properties>
                           </component>
                         </children>
                       </grid>
@@ -424,20 +424,20 @@
                               <text value="Štart"/>
                             </properties>
                           </component>
-                          <component id="d5e04" class="javax.swing.JButton" binding="pauseButton">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Pauza"/>
-                            </properties>
-                          </component>
-                          <component id="b46cd" class="javax.swing.JButton" binding="endButton">
+                          <component id="b46cd" class="javax.swing.JButton" binding="endWatchTimeButton">
                             <constraints>
                               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="Koniec behu"/>
+                            </properties>
+                          </component>
+                          <component id="d5e04" class="javax.swing.JButton" binding="pauseWatchTimeButton">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Pauza"/>
                             </properties>
                           </component>
                         </children>
@@ -462,7 +462,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <grid id="20f77" binding="panelTablesWorkersType1" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                              <grid id="20f77" binding="panelTablesWorkersOrder" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                 <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -498,7 +498,7 @@
                                   </scrollpane>
                                 </children>
                               </grid>
-                              <grid id="f78a3" binding="panelTablesWorkersType2" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                              <grid id="f78a3" binding="panelTablesWorkersPayment" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                 <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
                                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -549,7 +549,7 @@
                                     <properties/>
                                     <border type="none" title="Rad automat"/>
                                     <children>
-                                      <component id="27f63" class="javax.swing.JTable" binding="tableCWQ">
+                                      <component id="27f63" class="javax.swing.JTable" binding="tableTicketQueue">
                                         <constraints/>
                                         <properties>
                                           <autoResizeMode value="2"/>
@@ -564,7 +564,7 @@
                                     <properties/>
                                     <border type="none" title="Rad obsluha (max kapacita 9) "/>
                                     <children>
-                                      <component id="bb08b" class="javax.swing.JTable" binding="tableCPQ">
+                                      <component id="bb08b" class="javax.swing.JTable" binding="tableOrderQueue">
                                         <constraints/>
                                         <properties/>
                                       </component>
@@ -577,7 +577,7 @@
                                     <properties/>
                                     <border type="none" title="Rad platba"/>
                                     <children>
-                                      <component id="67631" class="javax.swing.JTable" binding="tableGarage">
+                                      <component id="67631" class="javax.swing.JTable" binding="tablePaymentQueue">
                                         <constraints/>
                                         <properties/>
                                       </component>
@@ -603,7 +603,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="e835" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="e835" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="10" right="0"/>
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -635,7 +635,7 @@
                       <text value="Počet obslužných miest"/>
                     </properties>
                   </component>
-                  <component id="ca60" class="javax.swing.JTextField">
+                  <component id="ca60" class="javax.swing.JTextField" binding="textFieldReplicationsTurbo">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -645,7 +645,7 @@
                       <text value="100000"/>
                     </properties>
                   </component>
-                  <component id="e67fd" class="javax.swing.JTextField">
+                  <component id="e67fd" class="javax.swing.JTextField" binding="textFieldCashTurbo">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -655,7 +655,7 @@
                       <text value="3"/>
                     </properties>
                   </component>
-                  <component id="98587" class="javax.swing.JTextField">
+                  <component id="98587" class="javax.swing.JTextField" binding="textFieldOrderPlacesTurbo">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -664,27 +664,6 @@
                     <properties>
                       <text value="2"/>
                     </properties>
-                  </component>
-                  <component id="678f7" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Rýchlosť simulácie"/>
-                    </properties>
-                  </component>
-                  <component id="1010" class="javax.swing.JSlider">
-                    <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <maximum value="1000"/>
-                      <minimum value="1"/>
-                      <value value="1"/>
-                    </properties>
-                    <clientProperties>
-                      <Slider.paintThumbArrowShape class="java.lang.Boolean" value="false"/>
-                    </clientProperties>
                   </component>
                 </children>
               </grid>
@@ -709,7 +688,7 @@
                       <text value="Počet vykonaných replikácii"/>
                     </properties>
                   </component>
-                  <component id="9c1d5" class="javax.swing.JLabel">
+                  <component id="9c1d5" class="javax.swing.JLabel" binding="executedReplicationsTurbo">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -838,7 +817,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="f6e28" class="javax.swing.JButton">
+                  <component id="f6e28" class="javax.swing.JButton" binding="startTurboButton">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -846,7 +825,7 @@
                       <text value="Štart"/>
                     </properties>
                   </component>
-                  <component id="6e170" class="javax.swing.JButton">
+                  <component id="6e170" class="javax.swing.JButton" binding="pauseTurboButton">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -854,7 +833,7 @@
                       <text value="Pauza"/>
                     </properties>
                   </component>
-                  <component id="dd43" class="javax.swing.JButton">
+                  <component id="dd43" class="javax.swing.JButton" binding="endTurboButton">
                     <constraints>
                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>

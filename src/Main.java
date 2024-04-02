@@ -1,8 +1,9 @@
+import GUI.ElektrokomponentyGUI;
 import GUI.GUI_Sem1;
 
 public class Main {
     public static void main(String[] args) {
-        GUI_Sem1 gui = new GUI_Sem1();
+        ElektrokomponentyGUI gui = new ElektrokomponentyGUI();
 
 //        Random baseGen = new Random(1);
 //        Sem1 simA = new Sem1(baseGen, new int[]{5, 3, 1, 1});
