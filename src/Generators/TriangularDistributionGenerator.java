@@ -8,8 +8,8 @@ public class TriangularDistributionGenerator {
     private double max;
     private double mode;
 
-    public TriangularDistributionGenerator(Random random, double min, double max, double mode) {
-        this.random = random;
+    public TriangularDistributionGenerator(Random seedGenerator, double min, double max, double mode) {
+        this.random = new Random(seedGenerator.nextInt());
         this.min = min;
         this.max = max;
         this.mode = mode;

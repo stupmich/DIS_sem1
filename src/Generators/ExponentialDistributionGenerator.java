@@ -6,9 +6,9 @@ public class ExponentialDistributionGenerator {
     private Random random;
     private double lambda;
 
-    public ExponentialDistributionGenerator(Random random, double lambda) {
+    public ExponentialDistributionGenerator(Random seedGenerator, double lambda) {
         this.lambda = lambda;
-        this.random = random;
+        this.random = new Random(seedGenerator.nextInt());
     }
 
     public double generate() {
