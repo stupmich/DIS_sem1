@@ -75,18 +75,18 @@ public class Sem2 extends EventBasedSimulationCore {
         int numberOfOnlineWorkers = this.numberOfWorkersOrder - numberOfNormalWorkers;
 
         for (int i = 0; i < numberOfNormalWorkers; i++ ) {
-            Worker worker = new Worker(this.highestWorkersOrderID);
+            Worker worker = new Worker(this.highestWorkersOrderID, Worker.WorkerType.ORDER_REGULAR_AND_CONTRACT);
             workersOrderNormal.add(worker);
             this.highestWorkersOrderID++;
         }
         for (int i = 0; i < numberOfOnlineWorkers; i++ ) {
-            Worker worker = new Worker(this.highestWorkersOrderID);
+            Worker worker = new Worker(this.highestWorkersOrderID, Worker.WorkerType.ORDER_ONLINE);
             workersOrderOnline.add(worker);
             this.highestWorkersOrderID++;
         }
 
         for (int i = 0; i < this.numberOfWorkersPayment; i++ ) {
-            Worker worker = new Worker(this.highestWorkersPaymentID);
+            Worker worker = new Worker(this.highestWorkersPaymentID, Worker.WorkerType.PAYMENT);
             workersPayment.add(worker);
             this.highestWorkersPaymentID++;
         }
@@ -169,18 +169,18 @@ public class Sem2 extends EventBasedSimulationCore {
         int numberOfOnlineWorkers = this.numberOfWorkersOrder - numberOfNormalWorkers;
 
         for (int i = 0; i < numberOfNormalWorkers; i++ ) {
-            Worker worker = new Worker(this.highestWorkersOrderID);
+            Worker worker = new Worker(this.highestWorkersOrderID, Worker.WorkerType.ORDER_REGULAR_AND_CONTRACT);
             workersOrderNormal.add(worker);
             this.highestWorkersOrderID++;
         }
         for (int i = 0; i < numberOfOnlineWorkers; i++ ) {
-            Worker worker = new Worker(this.highestWorkersOrderID);
+            Worker worker = new Worker(this.highestWorkersOrderID, Worker.WorkerType.ORDER_ONLINE);
             workersOrderOnline.add(worker);
             this.highestWorkersOrderID++;
         }
 
         for (int i = 0; i < this.numberOfWorkersPayment; i++ ) {
-            Worker worker = new Worker(this.highestWorkersPaymentID);
+            Worker worker = new Worker(this.highestWorkersPaymentID, Worker.WorkerType.PAYMENT);
             workersPayment.add(worker);
             this.highestWorkersPaymentID++;
         }

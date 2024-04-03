@@ -28,6 +28,9 @@ public class StartServiceEvent extends Event {
         // when new service is started place for another customer is free in shop
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
                 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
+            // it is more safe to reserve place in shop before interaction starts
+            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
+
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
             startInteraction.setCustomer(((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll());
             core.addEvent(startInteraction);

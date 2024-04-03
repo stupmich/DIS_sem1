@@ -239,7 +239,7 @@
                               <text value="Počet zákazníkov v rade na zaplatenie"/>
                             </properties>
                           </component>
-                          <component id="1484d" class="javax.swing.JLabel" binding="numberWorkers1">
+                          <component id="1484d" class="javax.swing.JLabel" binding="numberWorkersOrderNormal">
                             <constraints>
                               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
@@ -247,7 +247,7 @@
                               <text value=""/>
                             </properties>
                           </component>
-                          <component id="ea254" class="javax.swing.JLabel" binding="numberWorkers2">
+                          <component id="ea254" class="javax.swing.JLabel" binding="numberWorkersPayment">
                             <constraints>
                               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
@@ -255,7 +255,7 @@
                               <text value=""/>
                             </properties>
                           </component>
-                          <component id="6dd7e" class="javax.swing.JLabel" binding="numberCustomersAccept">
+                          <component id="6dd7e" class="javax.swing.JLabel" binding="numberCustomersTicket">
                             <constraints>
                               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
@@ -265,7 +265,7 @@
                           </component>
                           <component id="8e91b" class="javax.swing.JLabel" binding="numberCustomersQueueService">
                             <constraints>
-                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value=""/>
@@ -287,7 +287,7 @@
                               <text value="Počet voľných obsluznych miest - online zákazník"/>
                             </properties>
                           </component>
-                          <component id="4dd8" class="javax.swing.JLabel">
+                          <component id="4dd8" class="javax.swing.JLabel" binding="numberWorkersOrderOnline">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>

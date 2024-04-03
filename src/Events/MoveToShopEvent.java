@@ -54,11 +54,13 @@ public class MoveToShopEvent extends Event {
         ((Sem2) core).setCustomerInteractingWithTicketDispenser(null);
 
         // if there is place in shop + customer is waiting for ticket dispenser start new interaction
-        if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
-            && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
-                StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
-                startInteraction.setCustomer(((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll());
-                core.addEvent(startInteraction);
+        if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
+            // it is more safe to reserve place in shop before interaction starts
+            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
+
+            StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
+            startInteraction.setCustomer(((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll());
+            core.addEvent(startInteraction);
         }
     }
 }

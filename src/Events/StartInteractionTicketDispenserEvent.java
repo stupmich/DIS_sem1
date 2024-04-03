@@ -10,9 +10,6 @@ public class StartInteractionTicketDispenserEvent extends Event {
 
     @Override
     public void execute(EventBasedSimulationCore core) {
-        // it is more safe to reserve place in shop when interaction starts
-        ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
-
         ((Sem2) core).setCustomerInteractingWithTicketDispenser(customer);
 
         double next = ((Sem2) core).getTimeTicketDispenserGenerator().nextDouble(30.0,180.0);

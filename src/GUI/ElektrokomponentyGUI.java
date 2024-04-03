@@ -26,9 +26,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JLabel timeUser;
     private JLabel timeProgrammer;
     private JLabel executedReplications;
-    private JLabel numberWorkers1;
-    private JLabel numberWorkers2;
-    private JLabel numberCustomersAccept;
+    private JLabel numberWorkersOrderNormal;
+    private JLabel numberWorkersPayment;
+    private JLabel numberCustomersTicket;
     private JLabel numberCarsGarage;
     private JLabel numberCustomersPayment;
     private JLabel averageTimeSystem;
@@ -59,6 +59,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JTextField textFieldReplicationsTurbo;
     private JLabel executedReplicationsTurbo;
     private JLabel numberCustomersQueueService;
+    private JLabel numberWorkersOrderOnline;
     private Sem2 simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
@@ -84,11 +85,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
         modelWorkersOrder = new DefaultTableModel();
         modelWorkersOrder.addColumn("Worker ID");
+        modelWorkersOrder.addColumn("Worker type");
         modelWorkersOrder.addColumn("Customer ID");
         tableFreeW1.setModel(modelWorkersOrder);
 
         modelWorkersOrderW = new DefaultTableModel();
         modelWorkersOrderW.addColumn("Worker ID");
+        modelWorkersOrderW.addColumn("Worker type");
         modelWorkersOrderW.addColumn("Customer ID");
         tableWorkingW1.setModel(modelWorkersOrderW);
 
@@ -108,10 +111,12 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
         modelCustomersWaitingOrder = new DefaultTableModel();
         modelCustomersWaitingOrder.addColumn("Customer ID");
+        modelCustomersWaitingOrder.addColumn("Customer type");
         tableOrderQueue.setModel(modelCustomersWaitingOrder);
 
         modelCustomersPayment = new DefaultTableModel();
         modelCustomersPayment.addColumn("Customer ID");
+        modelCustomersPayment.addColumn("Number of queue");
         tablePaymentQueue.setModel(modelCustomersPayment);
 
         this.startTurboButton.addActionListener(this);
@@ -153,13 +158,17 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             String time = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
             this.timeUser.setText(time);
 
-            this. numberCustomersQueueService.setText(Integer.toString(simulation.getCustomersWaitingInShopBeforeOrder().size()));
-//            this.numberWorkers1.setText(Integer.toString(simulation.getWorkersOrderNormal().size() + simulation.getWorkersOrderOnline().size()));
-//            this.numberWorkers2.setText(Integer.toString(simulation.getWorkersPayment().size()));
-//            this.numberCustomersAccept.setText(Integer.toString(simulation.getQueueCustomersWaiting().size()));
-//            this.numberCarsGarage.setText(Integer.toString(simulation.getPlacesInGarage().size()));
-//            this.numberCustomersPayment.setText(Integer.toString(simulation.getQueueCustomersPayment().size()));
+            this.numberWorkersOrderNormal.setText(Integer.toString(simulation.getWorkersOrderNormal().size()));
+            this.numberWorkersOrderOnline.setText(Integer.toString(simulation.getWorkersOrderOnline().size()));
+            this.numberWorkersPayment.setText(Integer.toString(simulation.getWorkersPayment().size()));
+            this.numberCustomersTicket.setText(Integer.toString(simulation.getQueueCustomersWaitingTicketDispenser().size()));
+            this.numberCustomersQueueService.setText(Integer.toString(simulation.getCustomersWaitingInShopBeforeOrder().size()));
 
+            int numberCustomersPayment = 0;
+            for (LinkedList<Customer> queue : simulation.getQueuesCustomersWaitingForPayment()) {
+                numberCustomersPayment += queue.size();
+            }
+            this.numberCustomersPayment.setText(Integer.toString(numberCustomersPayment));
             this.executedReplications.setText(Integer.toString(simulation.getExecutedReplications()));
 
             try {
@@ -167,26 +176,26 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                     modelWorkersOrder.setRowCount(0);
                     for (Worker worker : simulation.getWorkersOrderNormal()) {
                         if (worker.getIdCustomer() == -1) {
-                            modelWorkersOrder.addRow(new Object[]{worker.getId(),"Free"});
+                            modelWorkersOrder.addRow(new Object[]{worker.getId(),worker.getType(),"Free"});
                         } else {
-                            modelWorkersOrder.addRow(new Object[]{worker.getId(),Integer.toString(worker.getIdCustomer()) });
+                            modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer()) });
                         }
                     }
                     for (Worker worker : simulation.getWorkersOrderOnline()) {
                         if (worker.getIdCustomer() == -1) {
-                            modelWorkersOrder.addRow(new Object[]{worker.getId(),"Free"});
+                            modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
                         } else {
-                            modelWorkersOrder.addRow(new Object[]{worker.getId(),Integer.toString(worker.getIdCustomer()) });
+                            modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer()) });
                         }
                     }
 
                     modelWorkersOrderW.setRowCount(0);
                     for (Worker worker : simulation.getWorkersOrderWorkingNormal()) {
-                        modelWorkersOrderW.addRow(new Object[]{worker.getId(),Integer.toString(worker.getIdCustomer()) });
+                        modelWorkersOrderW.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer()) });
                     }
 
                     for (Worker worker : simulation.getWorkersOrderWorkingOnline()) {
-                        modelWorkersOrderW.addRow(new Object[]{worker.getId(),Integer.toString(worker.getIdCustomer()) });
+                        modelWorkersOrderW.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer()) });
                     }
 
                     modelWorkersPayment.setRowCount(0);
@@ -206,23 +215,21 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
                     modelCustomersWaitingTicket.setRowCount(0);
                     for (Customer customer : simulation.getQueueCustomersWaitingTicketDispenser()) {
-                        modelCustomersWaitingTicket.addRow(new Object[]{ ((Customer) customer).getId() });
+                        modelCustomersWaitingTicket.addRow(new Object[]{ customer.getId() });
                     }
 
                     modelCustomersWaitingOrder.setRowCount(0);
                     for (Customer customer : simulation.getCustomersWaitingInShopBeforeOrder()) {
-                        modelCustomersWaitingOrder.addRow(new Object[]{ ((Customer) customer).getId() });
+                        modelCustomersWaitingOrder.addRow(new Object[]{ customer.getId(), customer.getCustomerType() });
                     }
 
                     modelCustomersPayment.setRowCount(0);
-                    for (Customer customer : simulation.getCustomersPaying()) {
-                        modelCustomersPayment.addRow(new Object[]{ ((Customer) customer).getId() });
-                    }
-
+                    int index = 0;
                     for (LinkedList<Customer> queue : simulation.getQueuesCustomersWaitingForPayment()) {
                         for (Customer customer : queue) {
-                            modelCustomersPayment.addRow(new Object[]{ ((Customer) customer).getId() });
+                            modelCustomersPayment.addRow(new Object[]{ ((Customer) customer).getId(), Integer.toString(index) });
                         }
+                        index++;
                     }
                 }});
             } catch (InterruptedException e) {
@@ -287,16 +294,17 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             simulation = new Sem2(Integer.parseInt(textFieldOrderPlacesWatchTime.getText()),Integer.parseInt(textFieldCashWatchTime.getText()),30600.0,false, this.sliderSpeed.getValue());
             simulation.setRunning(true);
             simulation.registerDelegate(this);
+            simulation.setExecutedReplications(0);
 
             for (Worker worker : simulation.getWorkersOrderWorkingNormal()) {
-                modelWorkersOrder.addRow(new Object[]{worker.getId(),"Free"});
+                modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
             }
             for (Worker worker : simulation.getWorkersOrderWorkingOnline()) {
-                modelWorkersOrder.addRow(new Object[]{worker.getId(),"Free"});
+                modelWorkersOrder.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
             }
 
             for (Worker worker : simulation.getWorkersPayment()) {
-                modelWorkersPayment.addRow(new Object[]{worker.getId(),"Free"});
+                modelWorkersPayment.addRow(new Object[]{worker.getId(), worker.getType(), "Free"});
             }
 
             Thread threadSimulation = new Thread(new Runnable() {
@@ -306,6 +314,22 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             });
             threadSimulation.start();
 
+        } else if (e.getSource() == pauseWatchTimeButton ) {
+            if (simulation.isPause()) {
+                simulation.setPause(false);
+            } else {
+                simulation.setPause(true);
+            }
+        } else if (e.getSource() == endWatchTimeButton) {
+            startTurboButton.setEnabled(true);
+            startWatchTimeButton.setEnabled(true);
+            pauseWatchTimeButton.setEnabled(false);
+            endWatchTimeButton.setEnabled(false);
+//            this.startGraphButton.setEnabled(true);
+//            this.pauseButtonGraph.setEnabled(false);
+//            this.endButtonGraph.setEnabled(false);
+
+            simulation.setRunning(false);
         }
     }
 
