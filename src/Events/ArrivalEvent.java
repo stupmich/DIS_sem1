@@ -27,6 +27,10 @@ public class ArrivalEvent extends Event {
         if (((Sem2) core).getCustomerInteractingWithTicketDispenser() != null || ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() >= ((Sem2) core).getNumOfPlacesInShop()) {
             ((Sem2) core).getQueueCustomersWaitingTicketDispenser().add(customer);
         } else {
+            if (((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() >= ((Sem2) core).getNumOfPlacesInShop()) {
+                System.out.println("fsgs");
+            }
+
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
             startInteraction.setCustomer(customer);
             core.addEvent(startInteraction);

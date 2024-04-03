@@ -17,13 +17,17 @@ public class EndPreparationEvent extends Event {
         double tooBigOrder = ((Sem2) core).getOrderSizeGenerator().nextDouble();
 
         if (tooBigOrder < 60.0) {
+            // order is too big -> worker stays blocked till customer comes back
             customer.setBlockingWorker(this.worker);
             int numberOfFreeWorkersPayment = ((Sem2) core).getWorkersPayment().size();
 
             if (numberOfFreeWorkersPayment == 0) {
+                // no free workers -> go to the queue according the rules
                 addCustomerToQueue(this.customer, core);
             } else if (numberOfFreeWorkersPayment == 1) {
+                // one free worker -> go to him and start payment
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().removeLast();
+                workerPayment.setIdCustomer(customer.getId());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -31,8 +35,11 @@ public class EndPreparationEvent extends Event {
                 startPaymentEvent.setWorker(workerPayment);
                 core.addEvent(startPaymentEvent);
             } else {
+                // more free workers -> pick random
                 int indexOfWorkerPayment = ((Sem2) core).getIndexPaymentEmptyQueueGenerator().nextInt(numberOfFreeWorkersPayment);
+
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().remove(indexOfWorkerPayment);
+                workerPayment.setIdCustomer(customer.getId());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -42,6 +49,7 @@ public class EndPreparationEvent extends Event {
             }
 
         } else {
+            // pick up order
             OrderPickUpEvent orderPickUpEvent = new OrderPickUpEvent(time);
             orderPickUpEvent.setCustomer(customer);
             orderPickUpEvent.setWorker(worker);
@@ -53,6 +61,7 @@ public class EndPreparationEvent extends Event {
         int minQueueLength = Integer.MAX_VALUE;
         LinkedList<LinkedList<Customer>> shortestQueues = new LinkedList<>();
 
+        // get shortest queues
         for (LinkedList<Customer> queue : ((Sem2) core).getQueuesCustomersWaitingForPayment()) {
             if (queue.size() < minQueueLength) {
                 shortestQueues.clear();
@@ -63,6 +72,7 @@ public class EndPreparationEvent extends Event {
             }
         }
 
+        // pick randomly queue where customer goes
         if (shortestQueues.size() > 0) {
             int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator().nextInt(shortestQueues.size());
             shortestQueues.get(selectedQueueIndex).add(customer);

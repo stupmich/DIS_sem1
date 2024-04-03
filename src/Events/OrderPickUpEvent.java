@@ -22,6 +22,7 @@ public class OrderPickUpEvent extends Event {
                 addCustomerToQueue(this.customer, core);
             } else if (numberOfFreeWorkersPayment == 1) {
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().removeLast();
+                workerPayment.setIdCustomer(customer.getId());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -30,7 +31,9 @@ public class OrderPickUpEvent extends Event {
                 core.addEvent(startPaymentEvent);
             } else {
                 int indexOfWorkerPayment = ((Sem2) core).getIndexPaymentEmptyQueueGenerator().nextInt(numberOfFreeWorkersPayment);
+
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().remove(indexOfWorkerPayment);
+                workerPayment.setIdCustomer(customer.getId());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -40,7 +43,7 @@ public class OrderPickUpEvent extends Event {
             }
 
         } else {
-            // order of this customer was too big, he just picks up order and leaves the shop
+            // order of this customer was too big, he already paid and just picks up order and leaves the shop
             LeaveShopEvent leaveShopEvent = new LeaveShopEvent(time);
             leaveShopEvent.setCustomer(customer);
             core.addEvent(leaveShopEvent);
@@ -62,17 +65,20 @@ public class OrderPickUpEvent extends Event {
             }
 
             if (nextCustomerNormal != null) {
+                worker.setIdCustomer(nextCustomerNormal.getId());
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(nextCustomerNormal);
                 startServiceEvent.setWorker(worker);
                 core.addEvent(startServiceEvent);
             } else { // no new customer -> worker is free
+                worker.setIdCustomer(-1);
                 ((Sem2) core).getWorkersOrderNormal().add(worker);
                 ((Sem2) core).getWorkersOrderWorkingNormal().remove(worker);
             }
 
         } else {
             Customer nextOnlineCustomer = null;
+
             for (Customer c : ((Sem2) core).getCustomersWaitingInShopBeforeOrder()) {
                 if (c.getCustomerType() == Customer.CustomerType.ONLINE) {
                     nextOnlineCustomer = c;
@@ -81,11 +87,13 @@ public class OrderPickUpEvent extends Event {
             }
 
             if (nextOnlineCustomer != null) {
+                worker.setIdCustomer(nextOnlineCustomer.getId());
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(nextOnlineCustomer);
                 startServiceEvent.setWorker(worker);
                 core.addEvent(startServiceEvent);
             } else { // no new customer -> worker is free
+                worker.setIdCustomer(-1);
                 ((Sem2) core).getWorkersOrderOnline().add(worker);
                 ((Sem2) core).getWorkersOrderWorkingOnline().remove(worker);
             }

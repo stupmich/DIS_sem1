@@ -58,6 +58,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JTextField textFieldOrderPlacesTurbo;
     private JTextField textFieldReplicationsTurbo;
     private JLabel executedReplicationsTurbo;
+    private JLabel numberCustomersQueueService;
     private Sem2 simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
@@ -152,6 +153,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             String time = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
             this.timeUser.setText(time);
 
+            this. numberCustomersQueueService.setText(Integer.toString(simulation.getCustomersWaitingInShopBeforeOrder().size()));
 //            this.numberWorkers1.setText(Integer.toString(simulation.getWorkersOrderNormal().size() + simulation.getWorkersOrderOnline().size()));
 //            this.numberWorkers2.setText(Integer.toString(simulation.getWorkersPayment().size()));
 //            this.numberCustomersAccept.setText(Integer.toString(simulation.getQueueCustomersWaiting().size()));

@@ -12,6 +12,7 @@ public class StartOrderPreparationEvent extends Event {
     @Override
     public void execute(EventBasedSimulationCore core) {
         double next = 0.0;
+
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             double type = ((Sem2) core).getCustomerTypeGenerator().nextDouble();
 

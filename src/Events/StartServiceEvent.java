@@ -12,17 +12,20 @@ public class StartServiceEvent extends Event {
     @Override
     public void execute(EventBasedSimulationCore core) {
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
+            // regular customer and customer with contract has to make his order first
             StartOrderingEvent startOrderingEvent = new StartOrderingEvent(time);
             startOrderingEvent.setCustomer(customer);
             startOrderingEvent.setWorker(worker);
             core.addEvent(startOrderingEvent);
         } else {
+            // order of online customer can be prepared straight away
             StartOrderPreparationEvent startOrderPreparationEvent = new StartOrderPreparationEvent(time);
             startOrderPreparationEvent.setCustomer(customer);
             startOrderPreparationEvent.setWorker(worker);
             core.addEvent(startOrderPreparationEvent);
         }
 
+        // when new service is started place for another customer is free in shop
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
                 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
