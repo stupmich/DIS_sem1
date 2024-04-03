@@ -49,6 +49,8 @@ public class Sem2 extends EventBasedSimulationCore {
     private Random timeOrderGenerator;
     private TriangularDistributionGenerator timeOrderHandoverGenerator;
     private Random orderSizeGenerator;
+    private Random indexPaymentSameLengthOfQueueGenerator;
+    private Random indexPaymentEmptyQueueGenerator;
     private Random timeBigOrderPickUpGenerator;
     private Random paymentTypeGenerator;
     private Random paymentCashGenerator;
@@ -113,6 +115,8 @@ public class Sem2 extends EventBasedSimulationCore {
         this.paymentCashGenerator = new Random(seedGenerator.nextInt());
         this.paymentCardGenerator = new Random(seedGenerator.nextInt());
         this.timeMediumOrderPreparationGenerator = new Random(seedGenerator.nextInt());
+        this.indexPaymentSameLengthOfQueueGenerator = new Random(seedGenerator.nextInt());
+        this.indexPaymentEmptyQueueGenerator = new Random(seedGenerator.nextInt());
 
         ArrayList<ContinuousEmpiricalDistributionParameter> parameterArrayListSimpleOrder = new ArrayList<ContinuousEmpiricalDistributionParameter>();
         ContinuousEmpiricalDistributionParameter pso1 = new ContinuousEmpiricalDistributionParameter(2,5,0.6);
@@ -481,5 +485,21 @@ public class Sem2 extends EventBasedSimulationCore {
 
     public void setWorkersOrderWorkingOnline(LinkedList<Worker> workersOrderWorkingOnline) {
         this.workersOrderWorkingOnline = workersOrderWorkingOnline;
+    }
+
+    public Random getIndexPaymentSameLengthOfQueueGenerator() {
+        return indexPaymentSameLengthOfQueueGenerator;
+    }
+
+    public void setIndexPaymentSameLengthOfQueueGenerator(Random indexPaymentSameLengthOfQueueGenerator) {
+        this.indexPaymentSameLengthOfQueueGenerator = indexPaymentSameLengthOfQueueGenerator;
+    }
+
+    public Random getIndexPaymentEmptyQueueGenerator() {
+        return indexPaymentEmptyQueueGenerator;
+    }
+
+    public void setIndexPaymentEmptyQueueGenerator(Random indexPaymentEmptyQueueGenerator) {
+        this.indexPaymentEmptyQueueGenerator = indexPaymentEmptyQueueGenerator;
     }
 }

@@ -22,6 +22,7 @@ public class Customer {
     private double startOfService;
     private double timeLeaveSystem;
     private double timeArrival;
+    private Worker blockingWorker;
 
     public Customer(double timeArrival, CustomerType type, int id) {
         this.timeArrival = timeArrival;
@@ -91,5 +92,21 @@ public class Customer {
 
     public void setTimeLeaveSystem(double timeLeaveSystem) {
         this.timeLeaveSystem = timeLeaveSystem;
+    }
+
+    public double getTimeArrival() {
+        return timeArrival;
+    }
+
+    public void setTimeArrival(double timeArrival) {
+        this.timeArrival = timeArrival;
+    }
+
+    public Worker getBlockingWorker() {
+        return blockingWorker;
+    }
+
+    public void setBlockingWorker(Worker blockingWorker) {
+        this.blockingWorker = blockingWorker;
     }
 }

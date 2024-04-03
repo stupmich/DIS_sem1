@@ -15,6 +15,7 @@ public class MoveToShopEvent extends Event {
             if (((Sem2) core).getWorkersOrderNormal().size() != 0) {
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(customer);
+                startServiceEvent.setWorker(((Sem2) core).getWorkersOrderNormal().removeLast());
                 core.addEvent(startServiceEvent);
             } else {
                 ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
@@ -23,6 +24,7 @@ public class MoveToShopEvent extends Event {
             if (((Sem2) core).getWorkersOrderOnline().size() != 0) {
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(customer);
+                startServiceEvent.setWorker(((Sem2) core).getWorkersOrderOnline().removeLast());
                 core.addEvent(startServiceEvent);
             } else {
                 ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
