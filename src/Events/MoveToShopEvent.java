@@ -15,6 +15,8 @@ public class MoveToShopEvent extends Event {
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             if (((Sem2) core).getWorkersOrderNormal().size() != 0) {
                 // there are free workers for regular customers and with contract
+                ((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(this.customer);
+
                 Worker worker = ((Sem2) core).getWorkersOrderNormal().removeLast();
                 worker.setIdCustomer(customer.getId());
 
@@ -31,6 +33,8 @@ public class MoveToShopEvent extends Event {
         } else {
             if (((Sem2) core).getWorkersOrderOnline().size() != 0) {
                 // there are free workers for online customers
+                ((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(this.customer);
+
                 Worker worker = ((Sem2) core).getWorkersOrderOnline().removeLast();
                 worker.setIdCustomer(customer.getId());
 

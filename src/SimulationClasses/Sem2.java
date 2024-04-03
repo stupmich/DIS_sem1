@@ -101,7 +101,7 @@ public class Sem2 extends EventBasedSimulationCore {
         this.customersPaying = new LinkedList<Customer>();
         this.allCustomers = new LinkedList<Customer>();
 
-        this.seedGenerator = new Random();
+        this.seedGenerator = new Random(1);
         double lambda = 1.0 / (60.0/30.0);
         this.arrivalsGenerator = new ExponentialDistributionGenerator(seedGenerator, lambda);
         this.customerTypeGenerator = new Random(seedGenerator.nextInt());

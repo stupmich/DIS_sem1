@@ -44,6 +44,7 @@ public class OrderPickUpEvent extends Event {
 
         } else {
             // order of this customer was too big, he already paid and just picks up order and leaves the shop
+            customer.setBlockingWorker(null);
             LeaveShopEvent leaveShopEvent = new LeaveShopEvent(time);
             leaveShopEvent.setCustomer(customer);
             core.addEvent(leaveShopEvent);
@@ -65,6 +66,7 @@ public class OrderPickUpEvent extends Event {
             }
 
             if (nextCustomerNormal != null) {
+                ((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(nextCustomerNormal);
                 worker.setIdCustomer(nextCustomerNormal.getId());
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(nextCustomerNormal);
@@ -87,6 +89,7 @@ public class OrderPickUpEvent extends Event {
             }
 
             if (nextOnlineCustomer != null) {
+                ((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(nextOnlineCustomer);
                 worker.setIdCustomer(nextOnlineCustomer.getId());
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(nextOnlineCustomer);
