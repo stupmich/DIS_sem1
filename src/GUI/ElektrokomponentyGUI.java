@@ -4,6 +4,15 @@ import Entities.Customer;
 import Entities.Worker;
 import Observer.ISimDelegate;
 import SimulationClasses.Sem2;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -70,6 +79,12 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JLabel averageTimeLeaveSystemTurbo;
     private JLabel averageUsePercTicketTurbo;
     private JTable tableTicketDispenser;
+    private JTextField textFieldReplicationsGraph;
+    private JTextField textFieldWorkersOrderGraph;
+    private JButton startButtonGraph;
+    private JButton pauseButtonGraph;
+    private JButton endButtonGraph;
+    private JPanel JPanelGraph1;
     private Sem2 simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
@@ -80,6 +95,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private DefaultTableModel modelCustomersWaitingOrder;
     private DefaultTableModel modelCustomersPayment;
     private DefaultTableModel modelCustomerTicketDispenser;
+    private Thread threadSimulationOuter1;
+    private Thread threadSimulationInner1;
+    private XYSeries series1 = new XYSeries("Priemerná dĺžka radu - automat");
+    private XYPlot plot1;
+    private XYSeriesCollection dataset1 = new XYSeriesCollection(series1);
+    private JFreeChart chart1;
+    private ChartPanel chartPanel1;
 
 
     public ElektrokomponentyGUI() {
@@ -136,28 +158,45 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
         this.startTurboButton.addActionListener(this);
         this.startWatchTimeButton.addActionListener(this);
-        //this.startGraphButton.addActionListener(this);
+        this.startButtonGraph.addActionListener(this);
         this.pauseWatchTimeButton.addActionListener(this);
         this.pauseTurboButton.addActionListener(this);
-        //this.pauseButtonGraph.addActionListener(this);
+        this.pauseButtonGraph.addActionListener(this);
         this.endWatchTimeButton.addActionListener(this);
         this.endTurboButton.addActionListener(this);
-        //this.endButtonGraph.addActionListener(this);
+        this.endButtonGraph.addActionListener(this);
         this.sliderSpeed.addChangeListener(this);
 
         pauseWatchTimeButton.setEnabled(false);
         endWatchTimeButton.setEnabled(false);
         pauseTurboButton.setEnabled(false);
         endTurboButton.setEnabled(false);
+
+        chart1 = ChartFactory.createXYLineChart("Závislosť čakajúcich v rade na automat/počet pokladní",
+                "Počet pokladní", "Priemerný počet čakajúcich", dataset1,
+                PlotOrientation.VERTICAL, false, true, false);
+        plot1 = chart1.getXYPlot();
+
+        ValueAxis axis1 = plot1.getDomainAxis();
+        axis1.setRange(2 , 6);
+
+        NumberAxis rangeAxis1 = (NumberAxis) plot1.getRangeAxis();
+        rangeAxis1.setAutoRange(true);
+        rangeAxis1.setAutoRangeIncludesZero(false);
+
+        chartPanel1 = new ChartPanel(chart1);
+        this.JPanelGraph1.setLayout(new BorderLayout());
+        this.JPanelGraph1.add(chartPanel1, BorderLayout.CENTER);
+        this.JPanelGraph1.validate();
     }
 
     @Override
     public void refresh() {
         if (turboMode) {
             this.executedReplicationsTurbo.setText(Integer.toString(simulation.getExecutedReplications()));
-            this.averageTimeSystemTurbo.setText(Double.toString(simulation.getAverageTimeInSystem()/60.0));
+            this.averageTimeSystemTurbo.setText(Double.toString(simulation.getAverageTimeInSystem() / 60.0));
             this.averageNumberServedCustomersTurbo.setText(Double.toString(simulation.getAverageServedCustomer()));
-            this.averageTimeQueueTicketTurbo.setText(Double.toString(simulation.getAverageTimeTicket()/60.0));
+            this.averageTimeQueueTicketTurbo.setText(Double.toString(simulation.getAverageTimeTicket() / 60.0));
             this.averageNumberQueueTicketTurbo.setText(Double.toString(simulation.getAverageNumberOfCustomersWaitingTicket()));
             this.averageUsePercTicketTurbo.setText(Double.toString(simulation.getAverageUsePercentTicket()));
 
@@ -169,32 +208,13 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             String time = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
             this.averageTimeLeaveSystemTurbo.setText(time);
 
-            //averageTimeAcceptTurbo.setText(Double.toString(simulation.getAverageWaitingTimeAccept()/60.0));
-            //averageTimeSystemTurbo.setText(Double.toString(simulation.getAverageTimeSystem()/60.0));
-            //averageCountAcceptTurbo.setText(Double.toString(simulation.getAverageCountCustomersWaitingAccept()));
-            //this.averageCountFreeWorkers1Turbo.setText(Double.toString(simulation.getAverageCountFreeWorkersType1()));
-            //this.averageCountFreeWorkers2Turbo.setText(Double.toString(simulation.getAverageCountFreeWorkersType2()));
-            //this.averageNumberCustomersSystemTurbo.setText(Double.toString(simulation.getAverageCountCustomersSystem()));
-//            this.ISAverageTimeSystemTurbo.setText("<" + Double.toString(simulation.getIsCustomersTimeSystemLow() / 60.0)
-//                    + ";" + Double.toString(simulation.getIsCustomersTimeSystemHigh() / 60.0)
-//                    + ">");
-//            this.ISAverageNumberCustomersSystemTurbo.setText("<" + Double.toString(simulation.getIsCountCustomersSystemLow())
-//                    + ";" + Double.toString(simulation.getIsCountCustomersSystemHigh())
-//                    + ">");
-//            this.averageCountCustomersAfterEndTurbo.setText(Double.toString(simulation.getAverageCarsAfterEnd()));
         } else {
             this.timeProgrammer.setText(Double.toString(simulation.getCurrentTime()));
             // Convert seconds to hours, minutes and remaining seconds
-
             long actualTime = (long) simulation.getCurrentTime() + 32400;
             long hours = TimeUnit.SECONDS.toHours(actualTime);
             long minutes = TimeUnit.SECONDS.toMinutes(actualTime) - (hours * 60);
             long remainingSeconds = (long) (actualTime - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes));
-
-
-//            long hours = TimeUnit.SECONDS.toHours((long) simulation.getCurrentTime());
-//            long minutes = TimeUnit.SECONDS.toMinutes((long) simulation.getCurrentTime()) - (hours * 60);
-//            long remainingSeconds = (long) (simulation.getCurrentTime() - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes));
             // Format the time as "hours:minutes:seconds"
             String timeString = String.format("%d:%02d:%02d", hours, minutes, remainingSeconds);
             this.timeUser.setText(timeString);
@@ -241,7 +261,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                         }
 
                         for (Worker worker : simulation.getWorkersOrderWorkingOnline()) {
-                            modelWorkersOrderW.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer()),  worker.getCustomer().getSizeOfOrder()});
+                            modelWorkersOrderW.addRow(new Object[]{worker.getId(), worker.getType(), Integer.toString(worker.getIdCustomer()), worker.getCustomer().getSizeOfOrder()});
                         }
 
                         modelWorkersPayment.setRowCount(0);
@@ -282,7 +302,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
 
                         modelCustomerTicketDispenser.setRowCount(0);
                         for (Customer customer : simulation.getCustomerInteractingWithTicketDispenser()) {
-                            modelCustomerTicketDispenser.addRow(new Object[]{ customer.getId() });
+                            modelCustomerTicketDispenser.addRow(new Object[]{customer.getId()});
                         }
                     }
                 });
@@ -292,20 +312,7 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 throw new RuntimeException(e);
             }
 
-            this.averageTimeSystem.setText(Double.toString(simulation.getAverageTimeInSystem()/60.0));
-//            averageTimeAccept.setText(Double.toString(simulation.getAverageWaitingTimeAccept()/60.0));
-//            averageTimeSystem.setText(Double.toString(simulation.getAverageTimeSystem()/60.0));
-//            averageCountAccept.setText(Double.toString(simulation.getAverageCountCustomersWaitingAccept()));
-//            this.averageCountFreeWorkers1.setText(Double.toString(simulation.getAverageCountFreeWorkersType1()));
-//            this.averageCountFreeWorkers2.setText(Double.toString(simulation.getAverageCountFreeWorkersType2()));
-//            this.averageNumberCustomersSystem.setText(Double.toString(simulation.getAverageCountCustomersSystem()));
-//            this.ISAverageNumberCustomersSystem.setText("<" + Double.toString(simulation.getIsCountCustomersSystemLow())
-//                    + ";" + Double.toString(simulation.getIsCountCustomersSystemHigh())
-//                    + ">");
-//            this.ISAverageTimeSystem.setText("<" + Double.toString(simulation.getIsCustomersTimeSystemLow() / 60.0)
-//                    + ";" + Double.toString(simulation.getIsCustomersTimeSystemHigh() / 60.0)
-//                    + ">");
-//            this.averageCountCustomersAfterEnd.setText(Double.toString(simulation.getAverageCarsAfterEnd()));
+            this.averageTimeSystem.setText(Double.toString(simulation.getAverageTimeInSystem() / 60.0));
         }
     }
 
@@ -313,19 +320,19 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startTurboButton) {
             this.turboMode = true;
-            startTurboButton.setEnabled(false);
-            startWatchTimeButton.setEnabled(false);
-            pauseTurboButton.setEnabled(true);
-            pauseWatchTimeButton.setEnabled(false);
-            endTurboButton.setEnabled(true);
-            endWatchTimeButton.setEnabled(false);
-            //this.startGraphButton.setEnabled(false);
-            //this.pauseButtonGraph.setEnabled(false);
-            //this.endButtonGraph.setEnabled(false);
+            this.startTurboButton.setEnabled(false);
+            this.startWatchTimeButton.setEnabled(false);
+            this.pauseTurboButton.setEnabled(true);
+            this.pauseWatchTimeButton.setEnabled(false);
+            this.endTurboButton.setEnabled(true);
+            this.endWatchTimeButton.setEnabled(false);
+            this.startButtonGraph.setEnabled(false);
+            this.pauseButtonGraph.setEnabled(false);
+            this.endButtonGraph.setEnabled(false);
 
-            simulation = new Sem2(Integer.parseInt(textFieldOrderPlacesTurbo.getText()), Integer.parseInt(textFieldCashTurbo.getText()), 30600.0, true, 0);
-            simulation.setRunning(true);
-            simulation.registerDelegate(this);
+            this.simulation = new Sem2(Integer.parseInt(textFieldOrderPlacesTurbo.getText()), Integer.parseInt(textFieldCashTurbo.getText()), 30600.0, true, 0);
+            this.simulation.setRunning(true);
+            this.simulation.registerDelegate(this);
 
             Thread threadSimulation = new Thread(new Runnable() {
                 public void run() {
@@ -344,9 +351,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             startWatchTimeButton.setEnabled(true);
             pauseTurboButton.setEnabled(false);
             endTurboButton.setEnabled(false);
-//            this.startGraphButton.setEnabled(true);
-//            this.pauseButtonGraph.setEnabled(false);
-//            this.endButtonGraph.setEnabled(false);
+            this.startButtonGraph.setEnabled(true);
+            this.pauseButtonGraph.setEnabled(false);
+            this.endButtonGraph.setEnabled(false);
 
             simulation.setRunning(false);
             simulation.setExecutedReplications(0);
@@ -358,9 +365,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             endWatchTimeButton.setEnabled(true);
             pauseTurboButton.setEnabled(false);
             endTurboButton.setEnabled(false);
-//            this.startGraphButton.setEnabled(false);
-//            this.pauseButtonGraph.setEnabled(false);
-//            this.endButtonGraph.setEnabled(false);
+            this.startButtonGraph.setEnabled(false);
+            this.pauseButtonGraph.setEnabled(false);
+            this.endButtonGraph.setEnabled(false);
 
             simulation = new Sem2(Integer.parseInt(textFieldOrderPlacesWatchTime.getText()), Integer.parseInt(textFieldCashWatchTime.getText()), 30600.0, false, this.sliderSpeed.getValue());
             simulation.setRunning(true);
@@ -396,11 +403,72 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
             startWatchTimeButton.setEnabled(true);
             pauseWatchTimeButton.setEnabled(false);
             endWatchTimeButton.setEnabled(false);
-//            this.startGraphButton.setEnabled(true);
-//            this.pauseButtonGraph.setEnabled(false);
-//            this.endButtonGraph.setEnabled(false);
+            this.startButtonGraph.setEnabled(true);
+            this.pauseButtonGraph.setEnabled(false);
+            this.endButtonGraph.setEnabled(false);
 
             simulation.setRunning(false);
+        } else if (e.getSource() == startButtonGraph) {
+            this.series1.clear();
+
+            this.turboMode = true;
+            startTurboButton.setEnabled(false);
+            startWatchTimeButton.setEnabled(false);
+            pauseTurboButton.setEnabled(false);
+            pauseWatchTimeButton.setEnabled(false);
+            endTurboButton.setEnabled(false);
+            endWatchTimeButton.setEnabled(false);
+
+            this.startButtonGraph.setEnabled(false);
+            this.pauseButtonGraph.setEnabled(true);
+            this.endButtonGraph.setEnabled(true);
+
+            threadSimulationOuter1 = new Thread(new Runnable() {
+                public void run() {
+                    for (int i = 2; i <= 6; i++) {
+                        simulation = new Sem2(Integer.parseInt(textFieldWorkersOrderGraph.getText()), i, 30600.0, true, 0);
+                        simulation.setRunning(true);
+
+                        threadSimulationInner1 = new Thread(new Runnable() {
+                            public void run() {
+                                simulation.executeReplications(Integer.parseInt(textFieldReplicationsGraph.getText()));
+                                series1.add(simulation.getNumberOfWorkersPayment(), simulation.getAverageNumberOfCustomersWaitingTicket());
+                                chart1.fireChartChanged();
+                            }
+                        });
+                        threadSimulationInner1.start();
+
+                        while (threadSimulationInner1.isAlive()) {
+                            try {
+                                Thread.sleep(1);
+                            } catch (InterruptedException ex) {
+                                return;
+                            }
+                        }
+
+                    }
+                }
+            });
+            threadSimulationOuter1.start();
+        } else if (e.getSource() == pauseButtonGraph) {
+            if (simulation.isPause()) {
+                simulation.setPause(false);
+            } else {
+                simulation.setPause(true);
+            }
+        } else if (e.getSource() == endButtonGraph) {
+            startTurboButton.setEnabled(true);
+            startWatchTimeButton.setEnabled(true);
+            pauseTurboButton.setEnabled(false);
+            endTurboButton.setEnabled(false);
+            this.startButtonGraph.setEnabled(true);
+            this.pauseButtonGraph.setEnabled(false);
+            this.endButtonGraph.setEnabled(false);
+
+            simulation.setRunning(false);
+            simulation.setExecutedReplications(0);
+            this.threadSimulationInner1.interrupt();
+            this.threadSimulationOuter1.interrupt();
         }
     }
 
