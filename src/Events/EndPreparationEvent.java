@@ -16,9 +16,10 @@ public class EndPreparationEvent extends Event {
     public void execute(EventBasedSimulationCore core) {
         double tooBigOrder = ((Sem2) core).getOrderSizeGenerator().nextDouble();
 
-        if (tooBigOrder < 60.0) {
+        if (tooBigOrder < 0.6) {
             // order is too big -> worker stays blocked till customer comes back
             customer.setBlockingWorker(this.worker);
+            customer.setSizeOfOrder(Customer.SizeOfOrder.BIG);
             int numberOfFreeWorkersPayment = ((Sem2) core).getWorkersPayment().size();
 
             if (numberOfFreeWorkersPayment == 0) {
@@ -28,6 +29,7 @@ public class EndPreparationEvent extends Event {
                 // one free worker -> go to him and start payment
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().removeLast();
                 workerPayment.setIdCustomer(customer.getId());
+                workerPayment.setCustomer(customer);
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -36,10 +38,11 @@ public class EndPreparationEvent extends Event {
                 core.addEvent(startPaymentEvent);
             } else {
                 // more free workers -> pick random
-                int indexOfWorkerPayment = ((Sem2) core).getIndexPaymentEmptyQueueGenerator().nextInt(numberOfFreeWorkersPayment);
+                int indexOfWorkerPayment = ((Sem2) core).getIndexPaymentEmptyQueueGenerator()[numberOfFreeWorkersPayment - 2].nextInt(numberOfFreeWorkersPayment);
 
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().remove(indexOfWorkerPayment);
                 workerPayment.setIdCustomer(customer.getId());
+                workerPayment.setCustomer(customer);
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -50,11 +53,13 @@ public class EndPreparationEvent extends Event {
 
         } else {
             // pick up order
+            customer.setSizeOfOrder(Customer.SizeOfOrder.REGULAR);
             OrderPickUpEvent orderPickUpEvent = new OrderPickUpEvent(time);
             orderPickUpEvent.setCustomer(customer);
             orderPickUpEvent.setWorker(worker);
             core.addEvent(orderPickUpEvent);
         }
+
     }
 
     public void addCustomerToQueue(Customer customer, EventBasedSimulationCore core) {
@@ -73,8 +78,10 @@ public class EndPreparationEvent extends Event {
         }
 
         // pick randomly queue where customer goes
-        if (shortestQueues.size() > 0) {
-            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator().nextInt(shortestQueues.size());
+        if (shortestQueues.size() == 1 ) {
+            shortestQueues.get(0).add(customer);
+        } else if (shortestQueues.size() > 1) {
+            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator()[shortestQueues.size() - 2].nextInt(shortestQueues.size());
             shortestQueues.get(selectedQueueIndex).add(customer);
         }
     }

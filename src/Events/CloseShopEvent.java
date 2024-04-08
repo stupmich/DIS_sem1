@@ -11,14 +11,18 @@ public class CloseShopEvent extends Event{
 
     @Override
     public void execute(EventBasedSimulationCore core) {
-        for (Customer c : ((Sem2) core).getQueueCustomersWaitingTicketDispenser()) {
-            // 17:00 -> customers waiting for ticket leave shop
-            LeaveShopEvent leaveShopEvent = new LeaveShopEvent(time);
-            leaveShopEvent.setCustomer(c);
-            core.addEvent(leaveShopEvent);
-        }
+//        for (Customer c : ((Sem2) core).getQueueCustomersWaitingTicketDispenser()) {
+//            // 17:00 -> customers waiting for ticket leave shop
+//            LeaveShopEvent leaveShopEvent = new LeaveShopEvent(time);
+//            leaveShopEvent.setCustomer(c);
+//            core.addEvent(leaveShopEvent);
+//        }
 
 //        ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
-//        ((Sem2) core).getQueueCustomersWaitingTicketDispenser().clear();
+        ((Sem2) core).getAllCustomers().removeAll(((Sem2) core).getQueueCustomersWaitingTicketDispenser());
+        for (int i = 0; i < ((Sem2) core).getQueueCustomersWaitingTicketDispenser().size(); i++) {
+            ((Sem2) core).incCustomersOut();
+        }
+        ((Sem2) core).getQueueCustomersWaitingTicketDispenser().clear();
     }
 }

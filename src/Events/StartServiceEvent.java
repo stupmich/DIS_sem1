@@ -27,13 +27,15 @@ public class StartServiceEvent extends Event {
 
         // when new service is started place for another customer is free in shop
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
-                && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
+                && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9
+                && ((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0) {
             // it is more safe to reserve place in shop before interaction starts
             ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
 
-            Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll();
+            Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().removeFirst();
 
-            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(nextCustomer);
+            ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());
+            ((Sem2) core).getCustomerInteractingWithTicketDispenser().add(nextCustomer);
 
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
             startInteraction.setCustomer(nextCustomer);

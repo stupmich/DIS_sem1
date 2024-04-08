@@ -4,6 +4,10 @@ import Entities.Customer;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
+import java.awt.desktop.OpenFilesEvent;
+import java.util.IllegalFormatCodePointException;
+import java.util.LinkedList;
+
 public class ArrivalEvent extends Event {
     public ArrivalEvent(double time) {
         super(time);
@@ -27,25 +31,21 @@ public class ArrivalEvent extends Event {
 
         ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
 
-        if (((Sem2) core).getCustomerInteractingWithTicketDispenser() != null
-                || ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() == ((Sem2) core).getNumOfPlacesInShop()) {
-            ((Sem2) core).getQueueCustomersWaitingTicketDispenser().add(customer);
-
-        } else {
-            // it is more safe to reserve place in shop before interaction starts
-            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
+        if (((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9) {
+            ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());
+            ((Sem2) core).getCustomerInteractingWithTicketDispenser().add(customer);
 
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
             startInteraction.setCustomer(customer);
             core.addEvent(startInteraction);
+        } else {
+            ((Sem2) core).getQueueCustomersWaitingTicketDispenser().add(customer);
         }
 
         double next = (((Sem2) core).getArrivalsGenerator().generate()) * 60.0;
         if (time + next <= 28800.0) {
-            this.setTime(time + next);
-            this.setCustomer(null);
-            this.setWorker(null);
-            core.addEvent(this);
+            ArrivalEvent arrivalEvent = new ArrivalEvent(time + next);
+            core.addEvent(arrivalEvent);
         }
     }
 }

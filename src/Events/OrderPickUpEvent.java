@@ -23,6 +23,7 @@ public class OrderPickUpEvent extends Event {
             } else if (numberOfFreeWorkersPayment == 1) {
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().removeLast();
                 workerPayment.setIdCustomer(customer.getId());
+                workerPayment.setCustomer(customer);
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -30,10 +31,11 @@ public class OrderPickUpEvent extends Event {
                 startPaymentEvent.setWorker(workerPayment);
                 core.addEvent(startPaymentEvent);
             } else {
-                int indexOfWorkerPayment = ((Sem2) core).getIndexPaymentEmptyQueueGenerator().nextInt(numberOfFreeWorkersPayment);
+                int indexOfWorkerPayment = ((Sem2) core).getIndexPaymentEmptyQueueGenerator()[numberOfFreeWorkersPayment - 2].nextInt(numberOfFreeWorkersPayment);
 
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().remove(indexOfWorkerPayment);
                 workerPayment.setIdCustomer(customer.getId());
+                workerPayment.setCustomer(customer);
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -72,12 +74,14 @@ public class OrderPickUpEvent extends Event {
             if (nextCustomerNormal != null) {
                 ((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(nextCustomerNormal);
                 worker.setIdCustomer(nextCustomerNormal.getId());
+                worker.setCustomer(nextCustomerNormal);
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(nextCustomerNormal);
                 startServiceEvent.setWorker(worker);
                 core.addEvent(startServiceEvent);
             } else { // no new customer -> worker is free
                 worker.setIdCustomer(-1);
+                worker.setCustomer(null);
                 ((Sem2) core).getWorkersOrderNormal().add(worker);
                 ((Sem2) core).getWorkersOrderWorkingNormal().remove(worker);
             }
@@ -86,24 +90,55 @@ public class OrderPickUpEvent extends Event {
             Customer nextOnlineCustomer = null;
 
             for (Customer c : ((Sem2) core).getCustomersWaitingInShopBeforeOrder()) {
-                if (c.getCustomerType() == Customer.CustomerType.ONLINE && c.isHasTicket()) {
-                    nextOnlineCustomer = c;
-                    break;
+                if (c.isHasTicket()) {
+                    if (c.getCustomerType() == Customer.CustomerType.ONLINE && c.isHasTicket()) {
+                        nextOnlineCustomer = c;
+                        break;
+                    }
                 }
+
             }
 
             if (nextOnlineCustomer != null) {
                 ((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(nextOnlineCustomer);
                 worker.setIdCustomer(nextOnlineCustomer.getId());
+                worker.setCustomer(nextOnlineCustomer);
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
                 startServiceEvent.setCustomer(nextOnlineCustomer);
                 startServiceEvent.setWorker(worker);
                 core.addEvent(startServiceEvent);
             } else { // no new customer -> worker is free
                 worker.setIdCustomer(-1);
+                worker.setCustomer(null);
                 ((Sem2) core).getWorkersOrderOnline().add(worker);
                 ((Sem2) core).getWorkersOrderWorkingOnline().remove(worker);
             }
+        }
+
+        if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
+                && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9
+                && ((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0) {
+            // it is more safe to reserve place in shop before interaction starts
+            ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
+
+            Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll();
+
+//            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(nextCustomer);
+
+            if (((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() > 9) {
+                System.out.println();
+            }
+
+            ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());
+            ((Sem2) core).getCustomerInteractingWithTicketDispenser().add(nextCustomer);
+
+            if (((Sem2) core).getCustomerInteractingWithTicketDispenser().size() > 1) {
+                System.out.println();
+            }
+
+            StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
+            startInteraction.setCustomer(nextCustomer);
+            core.addEvent(startInteraction);
         }
 
     }
@@ -122,8 +157,10 @@ public class OrderPickUpEvent extends Event {
             }
         }
 
-        if (shortestQueues.size() > 0) {
-            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator().nextInt(shortestQueues.size());
+        if (shortestQueues.size() == 1 ) {
+            shortestQueues.get(0).add(customer);
+        } else if (shortestQueues.size() > 1) {
+            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator()[shortestQueues.size() - 2].nextInt(shortestQueues.size());
             shortestQueues.get(selectedQueueIndex).add(customer);
         }
     }

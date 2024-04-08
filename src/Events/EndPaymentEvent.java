@@ -1,6 +1,7 @@
 package Events;
 
 import Entities.Customer;
+import Entities.Worker;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -26,7 +27,7 @@ public class EndPaymentEvent extends Event {
             core.addEvent(leaveShopEvent);
 
             ((Sem2) core).incServedCustomers();
-            }
+        }
 
         if (((Sem2) core).getQueuesCustomersWaitingForPayment().get(this.worker.getId()).isEmpty()) {
             // no customers in queue for this worker -> worker free

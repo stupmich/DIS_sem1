@@ -8,7 +8,9 @@ public class Worker {
     }
     private int id;
     private int idCustomer = -1;
+    private Customer customer = null;
     private WorkerType type;
+
 
     public Worker(int id, WorkerType type ) {
         this.id = id;
@@ -37,5 +39,13 @@ public class Worker {
 
     public void setType(WorkerType type) {
         this.type = type;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

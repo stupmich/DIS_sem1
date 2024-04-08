@@ -11,7 +11,7 @@ public class ArithmeticMeanStatistics {
         this.totalSum += sample;
         this.totalSumSquared += Math.pow(sample, 2);
         this.count++;
-        this.mean = this.totalSum / this.count;
+        this.mean = this.totalSum / ((double) this.count);
         return this.mean;
     }
 

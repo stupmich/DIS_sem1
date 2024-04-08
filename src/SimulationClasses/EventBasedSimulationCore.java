@@ -22,11 +22,12 @@ public abstract class EventBasedSimulationCore  extends SimulationCore{
     @Override
     public void executeOneReplication() {
         Event lvEvent;
+
         while(!timeLine.isEmpty() && this.isRunning) {
             lvEvent = timeLine.poll();
             currentTime = lvEvent.getTime();
 
-            if (currentTime > maxTime) {
+            if (currentTime > maxTime && timeLine.isEmpty()) {
                 break;
             }
 

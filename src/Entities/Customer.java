@@ -13,9 +13,15 @@ public class Customer {
         DIFFICULT
     }
 
+    public enum SizeOfOrder {
+        REGULAR,
+        BIG,
+    }
+
     private int id;
     private CustomerType customerType;
     private OrderType orderType;
+    private SizeOfOrder sizeOfOrder;
     private double startOfWaitingInQueue;
     private double waitingQueueTime;
     private double serviceTime;
@@ -116,5 +122,13 @@ public class Customer {
 
     public void setHasTicket(boolean hasTicket) {
         this.hasTicket = hasTicket;
+    }
+
+    public SizeOfOrder getSizeOfOrder() {
+        return sizeOfOrder;
+    }
+
+    public void setSizeOfOrder(SizeOfOrder sizeOfOrder) {
+        this.sizeOfOrder = sizeOfOrder;
     }
 }
