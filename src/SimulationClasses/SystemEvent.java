@@ -1,6 +1,6 @@
-package Events;
+package SimulationClasses;
 
-import SimulationClasses.EventBasedSimulationCore;
+import Events.Event;
 
 public class SystemEvent extends Event {
     private int timeGap;

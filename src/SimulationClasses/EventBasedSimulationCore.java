@@ -48,7 +48,7 @@ public abstract class EventBasedSimulationCore  extends SimulationCore{
 
     @Override
     public void afterOneReplication() {
-        if (!turboMode) {
+        if (turboMode) {
             this.refreshGUI();
         }
     }

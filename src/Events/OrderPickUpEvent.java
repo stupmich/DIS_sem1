@@ -48,6 +48,8 @@ public class OrderPickUpEvent extends Event {
             LeaveShopEvent leaveShopEvent = new LeaveShopEvent(time);
             leaveShopEvent.setCustomer(customer);
             core.addEvent(leaveShopEvent);
+
+            ((Sem2) core).incServedCustomers();
         }
 
         // Customer picked up order -> worker is free again and can serve another customer
@@ -55,13 +57,15 @@ public class OrderPickUpEvent extends Event {
             Customer nextCustomerNormal = null;
 
             for (Customer c : ((Sem2) core).getCustomersWaitingInShopBeforeOrder()) {
-                if (c.getCustomerType() == Customer.CustomerType.CONTRACT) {
-                    nextCustomerNormal = c;
-                    break;
-                }
+                if (c.isHasTicket()) {
+                    if (c.getCustomerType() == Customer.CustomerType.CONTRACT) {
+                        nextCustomerNormal = c;
+                        break;
+                    }
 
-                if (c.getCustomerType() == Customer.CustomerType.REGULAR && nextCustomerNormal == null) {
-                    nextCustomerNormal = c;
+                    if (c.getCustomerType() == Customer.CustomerType.REGULAR && nextCustomerNormal == null) {
+                        nextCustomerNormal = c;
+                    }
                 }
             }
 
@@ -82,7 +86,7 @@ public class OrderPickUpEvent extends Event {
             Customer nextOnlineCustomer = null;
 
             for (Customer c : ((Sem2) core).getCustomersWaitingInShopBeforeOrder()) {
-                if (c.getCustomerType() == Customer.CustomerType.ONLINE) {
+                if (c.getCustomerType() == Customer.CustomerType.ONLINE && c.isHasTicket()) {
                     nextOnlineCustomer = c;
                     break;
                 }

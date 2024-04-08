@@ -23,7 +23,7 @@ public class Customer {
     private double timeLeaveSystem;
     private double timeArrival;
     private Worker blockingWorker;
-
+    private boolean hasTicket = false;
     public Customer(double timeArrival, CustomerType type, int id) {
         this.timeArrival = timeArrival;
         this.customerType = type;
@@ -108,5 +108,13 @@ public class Customer {
 
     public void setBlockingWorker(Worker blockingWorker) {
         this.blockingWorker = blockingWorker;
+    }
+
+    public boolean isHasTicket() {
+        return hasTicket;
+    }
+
+    public void setHasTicket(boolean hasTicket) {
+        this.hasTicket = hasTicket;
     }
 }

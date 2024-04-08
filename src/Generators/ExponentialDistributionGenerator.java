@@ -11,6 +11,16 @@ public class ExponentialDistributionGenerator {
         this.random = new Random(seedGenerator.nextInt());
     }
 
+    public ExponentialDistributionGenerator(int seed, double lambda) {
+        this.lambda = lambda;
+        this.random = new Random(seed);
+    }
+
+    public ExponentialDistributionGenerator(double lambda) {
+        this.lambda = lambda;
+        this.random = new Random();
+    }
+
     public double generate() {
         double u = random.nextDouble();
         double x = Math.log(1 - u) / (-lambda);

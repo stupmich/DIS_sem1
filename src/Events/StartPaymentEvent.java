@@ -18,6 +18,7 @@ public class StartPaymentEvent extends Event{
         } else {
             next = ((Sem2) core).getPaymentCardGenerator().nextInt(180,361);
         }
+//        next = 0.0;
 
         EndPaymentEvent endPaymentEvent = new EndPaymentEvent(time + next);
         endPaymentEvent.setCustomer(customer);

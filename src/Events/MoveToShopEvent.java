@@ -12,6 +12,8 @@ public class MoveToShopEvent extends Event {
 
     @Override
     public void execute(EventBasedSimulationCore core) {
+        this.customer.setHasTicket(true);
+
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             if (((Sem2) core).getWorkersOrderNormal().size() != 0) {
                 // there are free workers for regular customers and with contract
@@ -27,9 +29,6 @@ public class MoveToShopEvent extends Event {
                 startServiceEvent.setWorker(worker);
                 core.addEvent(startServiceEvent);
             }
-//            else { better to have it in start interaction
-//                ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
-//            }
         } else {
             if (((Sem2) core).getWorkersOrderOnline().size() != 0) {
                 // there are free workers for online customers
@@ -45,9 +44,6 @@ public class MoveToShopEvent extends Event {
                 startServiceEvent.setWorker(worker);
                 core.addEvent(startServiceEvent);
             }
-//            else { better to have it in start interaction
-//                ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
-//            }
         }
 
         // customer stopped interacting with ticket dispenser
@@ -56,10 +52,14 @@ public class MoveToShopEvent extends Event {
         // if there is place in shop + customer is waiting for ticket dispenser start new interaction
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
             // it is more safe to reserve place in shop before interaction starts
-            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
+            ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
+
+            Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll();
+
+            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(nextCustomer);
 
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
-            startInteraction.setCustomer(((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll());
+            startInteraction.setCustomer(nextCustomer);
             core.addEvent(startInteraction);
         }
     }

@@ -15,6 +15,20 @@ public class TriangularDistributionGenerator {
         this.mode = mode;
     }
 
+    public TriangularDistributionGenerator(int seed, double min, double max, double mode) {
+        this.random = new Random(seed);
+        this.min = min;
+        this.max = max;
+        this.mode = mode;
+    }
+
+    public TriangularDistributionGenerator(double min, double max, double mode) {
+        this.random = new Random();
+        this.min = min;
+        this.max = max;
+        this.mode = mode;
+    }
+
     public double generate() {
         double u = random.nextDouble();
         double c = (mode - min) / (max - min);

@@ -29,10 +29,14 @@ public class StartServiceEvent extends Event {
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
                 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < ((Sem2) core).getNumOfPlacesInShop()) {
             // it is more safe to reserve place in shop before interaction starts
-            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(this.customer);
+            ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
+
+            Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll();
+
+            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(nextCustomer);
 
             StartInteractionTicketDispenserEvent startInteraction = new StartInteractionTicketDispenserEvent(time);
-            startInteraction.setCustomer(((Sem2) core).getQueueCustomersWaitingTicketDispenser().poll());
+            startInteraction.setCustomer(nextCustomer);
             core.addEvent(startInteraction);
         }
     }

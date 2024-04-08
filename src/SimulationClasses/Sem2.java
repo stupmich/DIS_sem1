@@ -3,12 +3,15 @@ package SimulationClasses;
 import Entities.Customer;
 import Entities.Worker;
 import Events.ArrivalEvent;
-import Events.SystemEvent;
+import Events.CloseShopEvent;
+import Events.LeaveShopEvent;
 import Generators.ContinuousEmpiricalDistributionGenerator;
 import Generators.ContinuousEmpiricalDistributionParameter;
 import Generators.ExponentialDistributionGenerator;
 import Generators.TriangularDistributionGenerator;
 import Observer.ISimDelegate;
+import Statistics.ArithmeticMeanStatistics;
+import Statistics.WeightedArithmeticMean;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -58,6 +61,19 @@ public class Sem2 extends EventBasedSimulationCore {
     private ContinuousEmpiricalDistributionGenerator timeSimpleOrderPreparationGenerator;
     private Random timeMediumOrderPreparationGenerator;
     private ContinuousEmpiricalDistributionGenerator timeDifficultOrderPreparationGenerator;
+    private int customersIn;
+    private int customersOut;
+    private int servedCustomers;
+    private ArithmeticMeanStatistics averageTimeInSystemStat;
+    private ArithmeticMeanStatistics averageTimeTicketStat;
+    private ArithmeticMeanStatistics averageServedCustomerStat;
+    private ArithmeticMeanStatistics averageTimeLeaveSystemStat;
+    private WeightedArithmeticMean numberOfCustomersWaitingTicketStat;
+    private double averageTimeInSystem;
+    private double averageTimeTicket;
+    private double averageServedCustomer;
+    private double averageNumberOfCustomersWaitingTicket;
+    private double averageTimeLeaveSystem;
 
     public Sem2(int numberOfWorkersOrder, int numberOfWorkersPayment, double maxTime, boolean turboMode, int timeGap) {
         super(maxTime, turboMode, timeGap);
@@ -101,7 +117,7 @@ public class Sem2 extends EventBasedSimulationCore {
         this.customersPaying = new LinkedList<Customer>();
         this.allCustomers = new LinkedList<Customer>();
 
-        this.seedGenerator = new Random(1);
+        this.seedGenerator = new Random();
         double lambda = 1.0 / (60.0/30.0);
         this.arrivalsGenerator = new ExponentialDistributionGenerator(seedGenerator, lambda);
         this.customerTypeGenerator = new Random(seedGenerator.nextInt());
@@ -119,16 +135,16 @@ public class Sem2 extends EventBasedSimulationCore {
         this.indexPaymentEmptyQueueGenerator = new Random(seedGenerator.nextInt());
 
         ArrayList<ContinuousEmpiricalDistributionParameter> parameterArrayListSimpleOrder = new ArrayList<ContinuousEmpiricalDistributionParameter>();
-        ContinuousEmpiricalDistributionParameter pso1 = new ContinuousEmpiricalDistributionParameter(2,5,0.6);
-        ContinuousEmpiricalDistributionParameter pso2 = new ContinuousEmpiricalDistributionParameter(5,9,0.4);
+        ContinuousEmpiricalDistributionParameter pso1 = new ContinuousEmpiricalDistributionParameter(2.0,5.0,0.6);
+        ContinuousEmpiricalDistributionParameter pso2 = new ContinuousEmpiricalDistributionParameter(5.0,9.0,0.4);
         parameterArrayListSimpleOrder.add(pso1);
         parameterArrayListSimpleOrder.add(pso2);
         this.timeSimpleOrderPreparationGenerator = new ContinuousEmpiricalDistributionGenerator(this.seedGenerator, parameterArrayListSimpleOrder);
 
         ArrayList<ContinuousEmpiricalDistributionParameter> parameterArrayListDifficultOrder = new ArrayList<ContinuousEmpiricalDistributionParameter>();
-        ContinuousEmpiricalDistributionParameter pdo1 = new ContinuousEmpiricalDistributionParameter(11,12,0.1);
-        ContinuousEmpiricalDistributionParameter pdo2 = new ContinuousEmpiricalDistributionParameter(12,20,0.6);
-        ContinuousEmpiricalDistributionParameter pdo3 = new ContinuousEmpiricalDistributionParameter(20,25,0.3);
+        ContinuousEmpiricalDistributionParameter pdo1 = new ContinuousEmpiricalDistributionParameter(11.0,12.0,0.1);
+        ContinuousEmpiricalDistributionParameter pdo2 = new ContinuousEmpiricalDistributionParameter(12.0,20.0,0.6);
+        ContinuousEmpiricalDistributionParameter pdo3 = new ContinuousEmpiricalDistributionParameter(20.0,25.0,0.3);
         parameterArrayListDifficultOrder.add(pdo1);
         parameterArrayListDifficultOrder.add(pdo2);
         parameterArrayListDifficultOrder.add(pdo3);
@@ -139,6 +155,9 @@ public class Sem2 extends EventBasedSimulationCore {
         ArrivalEvent startEvent = new ArrivalEvent(0.0);
         this.addEvent(startEvent);
 
+        CloseShopEvent closeShopEvent = new CloseShopEvent(28800);
+        this.addEvent(closeShopEvent);
+
         if (!turboMode) {
             SystemEvent nextSystemEvent = new SystemEvent(0.0, this.timeGap);
             this.addEvent(nextSystemEvent);
@@ -147,6 +166,12 @@ public class Sem2 extends EventBasedSimulationCore {
         this.highestCustomerID = 0;
         this.highestWorkersOrderID = 0;
         this.highestWorkersPaymentID = 0;
+
+        this.averageTimeInSystemStat = new ArithmeticMeanStatistics();
+        this.averageTimeTicketStat = new ArithmeticMeanStatistics();
+        averageServedCustomerStat = new ArithmeticMeanStatistics();
+        averageTimeLeaveSystemStat = new ArithmeticMeanStatistics();
+        numberOfCustomersWaitingTicketStat = new WeightedArithmeticMean();
     }
 
     @Override
@@ -165,7 +190,7 @@ public class Sem2 extends EventBasedSimulationCore {
         workersPayment.clear();
         workersPaymentWorking.clear();
 
-        int numberOfNormalWorkers = (int) Math.round(this.numberOfWorkersOrder * 2 / 3.0);
+        int numberOfNormalWorkers = (int) Math.round(this.numberOfWorkersOrder * 2.0 / 3.0);
         int numberOfOnlineWorkers = this.numberOfWorkersOrder - numberOfNormalWorkers;
 
         for (int i = 0; i < numberOfNormalWorkers; i++ ) {
@@ -194,20 +219,32 @@ public class Sem2 extends EventBasedSimulationCore {
         }
         customersPaying.clear();
         allCustomers.clear();
-        timeLine.clear();
 
+        timeLine.clear();
 
         ArrivalEvent startEvent = new ArrivalEvent(0.0);
         this.addEvent(startEvent);
+
+        CloseShopEvent closeShopEvent = new CloseShopEvent(28800);
+        this.addEvent(closeShopEvent);
+
         if (!turboMode) {
             SystemEvent nextSystemEvent = new SystemEvent(0.0, this.timeGap);
             this.addEvent(nextSystemEvent);
         }
+
+        this.averageServedCustomer = this.averageServedCustomerStat.calculateMean(this.servedCustomers);
+
+        this.customersOut = 0;
+        this.customersIn = 0;
+        this.servedCustomers = 0;
+
+        this.getNumberOfCustomersWaitingTicketStat().setLastUpdateTime(0.0);
     }
 
     @Override
     public void updateStatistics() {
-
+        this.averageNumberOfCustomersWaitingTicket = this.getNumberOfCustomersWaitingTicketStat().calculateWeightedMean();
     }
 
 
@@ -502,4 +539,119 @@ public class Sem2 extends EventBasedSimulationCore {
     public void setIndexPaymentEmptyQueueGenerator(Random indexPaymentEmptyQueueGenerator) {
         this.indexPaymentEmptyQueueGenerator = indexPaymentEmptyQueueGenerator;
     }
+
+    public int getCustomersIn() {
+        return customersIn;
+    }
+
+    public void setCustomersIn(int customersIn) {
+        this.customersIn = customersIn;
+    }
+
+    public int getCustomersOut() {
+        return customersOut;
+    }
+
+    public void setCustomersOut(int customersOut) {
+        this.customersOut = customersOut;
+    }
+    public void incCustomersIn() {
+        this.customersIn++;
+    }
+    public void incCustomersOut() {
+        this.customersOut++;
+    }
+
+    public ArithmeticMeanStatistics getAverageTimeInSystemStat() {
+        return averageTimeInSystemStat;
+    }
+
+    public void setAverageTimeInSystemStat(ArithmeticMeanStatistics averageTimeInSystemStat) {
+        this.averageTimeInSystemStat = averageTimeInSystemStat;
+    }
+
+    public double getAverageTimeInSystem() {
+        return averageTimeInSystem;
+    }
+
+    public void setAverageTimeInSystem(double averageTimeInSystem) {
+        this.averageTimeInSystem = averageTimeInSystem;
+    }
+
+    public int getServedCustomers() {
+        return servedCustomers;
+    }
+
+    public void setServedCustomers(int servedCustomers) {
+        this.servedCustomers = servedCustomers;
+    }
+
+    public ArithmeticMeanStatistics getAverageServedCustomerStat() {
+        return averageServedCustomerStat;
+    }
+
+    public void setAverageServedCustomerStat(ArithmeticMeanStatistics averageServedCustomerStat) {
+        this.averageServedCustomerStat = averageServedCustomerStat;
+    }
+
+    public double getAverageServedCustomer() {
+        return averageServedCustomer;
+    }
+
+    public void setAverageServedCustomer(double averageServedCustomer) {
+        this.averageServedCustomer = averageServedCustomer;
+    }
+    public void incServedCustomers() {
+        this.servedCustomers++;
+    }
+
+    public ArithmeticMeanStatistics getAverageTimeTicketStat() {
+        return averageTimeTicketStat;
+    }
+
+    public void setAverageTimeTicketStat(ArithmeticMeanStatistics averageTimeTicketStat) {
+        this.averageTimeTicketStat = averageTimeTicketStat;
+    }
+
+    public double getAverageTimeTicket() {
+        return averageTimeTicket;
+    }
+
+    public void setAverageTimeTicket(double averageTimeTicket) {
+        this.averageTimeTicket = averageTimeTicket;
+    }
+
+    public WeightedArithmeticMean getNumberOfCustomersWaitingTicketStat() {
+        return numberOfCustomersWaitingTicketStat;
+    }
+
+    public void setNumberOfCustomersWaitingTicketStat(WeightedArithmeticMean numberOfCustomersWaitingTicketStat) {
+        this.numberOfCustomersWaitingTicketStat = numberOfCustomersWaitingTicketStat;
+    }
+
+    public double getAverageNumberOfCustomersWaitingTicket() {
+        return averageNumberOfCustomersWaitingTicket;
+    }
+
+    public void setAverageNumberOfCustomersWaitingTicket(double averageNumberOfCustomersWaitingTicket) {
+        this.averageNumberOfCustomersWaitingTicket = averageNumberOfCustomersWaitingTicket;
+    }
+
+    public ArithmeticMeanStatistics getAverageTimeLeaveSystemStat() {
+        return averageTimeLeaveSystemStat;
+    }
+
+    public void setAverageTimeLeaveSystemStat(ArithmeticMeanStatistics averageTimeLeaveSystemStat) {
+        this.averageTimeLeaveSystemStat = averageTimeLeaveSystemStat;
+    }
+
+    public double getAverageTimeLeaveSystem() {
+        return averageTimeLeaveSystem;
+    }
+
+    public void setAverageTimeLeaveSystem(double averageTimeLeaveSystem) {
+        this.averageTimeLeaveSystem = averageTimeLeaveSystem;
+    }
+
+
 }

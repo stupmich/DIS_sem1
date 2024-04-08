@@ -26,11 +26,11 @@ public class StartOrderPreparationEvent extends Event {
                 this.customer.setOrderType(Customer.OrderType.DIFFICULT);
                 next = ((Sem2) core).getTimeDifficultOrderPreparationGenerator().generate();
             }
-
+            next = next * 60.0;
         } else {
             next = ((Sem2) core).getTimeOrderHandoverGenerator().generate();
         }
-
+//        next = 0.0;
         EndPreparationEvent endPreparationEvent = new EndPreparationEvent(time + next);
         endPreparationEvent.setCustomer(customer);
         endPreparationEvent.setWorker(worker);

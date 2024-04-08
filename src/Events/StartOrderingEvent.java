@@ -11,6 +11,7 @@ public class StartOrderingEvent extends Event{
     @Override
     public void execute(EventBasedSimulationCore core) {
         double next = ((Sem2) core).getTimeOrderGenerator().nextDouble(60,900);
+//        next = 0.0;
         StartOrderPreparationEvent startOrderPreparationEvent = new StartOrderPreparationEvent(time + next);
         startOrderPreparationEvent.setCustomer(customer);
         startOrderPreparationEvent.setWorker(worker);
