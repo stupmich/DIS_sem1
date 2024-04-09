@@ -29,9 +29,9 @@ public class ArrivalEvent extends Event {
         ((Sem2) core).getAllCustomers().add(customer);
         ((Sem2) core).incCustomersIn();
 
-        ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
+        if (((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0
+                && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9) {
 
-        if (((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9) {
             ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());
             ((Sem2) core).getCustomerInteractingWithTicketDispenser().add(customer);
 
@@ -39,12 +39,14 @@ public class ArrivalEvent extends Event {
             startInteraction.setCustomer(customer);
             core.addEvent(startInteraction);
         } else {
+            ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
             ((Sem2) core).getQueueCustomersWaitingTicketDispenser().add(customer);
         }
 
         double next = (((Sem2) core).getArrivalsGenerator().generate()) * 60.0;
         if (time + next <= 28800.0) {
             ArrivalEvent arrivalEvent = new ArrivalEvent(time + next);
+//            arrivalEvent.setPriority(1);
             core.addEvent(arrivalEvent);
         }
     }

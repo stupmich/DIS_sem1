@@ -15,7 +15,7 @@ public class WeightedArithmeticMean {
     public void updateStatistics(EventBasedSimulationCore core, LinkedList<?> list) {
         double currentTime = core.getCurrentTime();
         double timeDelta = currentTime - lastUpdateTime;
-        int size = list.size();
+        double size = list.size();
 
         // Use size as the value and timeDelta as the weight
         weightedSum += size * timeDelta;

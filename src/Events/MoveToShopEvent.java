@@ -33,8 +33,6 @@ public class MoveToShopEvent extends Event {
         } else {
             if (((Sem2) core).getWorkersOrderOnline().size() != 0) {
                 // there are free workers for online customers
-                //((Sem2) core).getCustomersWaitingInShopBeforeOrder().remove(this.customer);
-
                 Worker worker = ((Sem2) core).getWorkersOrderOnline().removeLast();
                 worker.setIdCustomer(customer.getId());
                 worker.setCustomer(customer);
@@ -52,18 +50,14 @@ public class MoveToShopEvent extends Event {
 
         // customer stopped interacting with ticket dispenser
         ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());
-
         ((Sem2) core).getCustomerInteractingWithTicketDispenser().remove(customer);
 
         // if there is place in shop + customer is waiting for ticket dispenser start new interaction
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
                 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9) {
-            // it is more safe to reserve place in shop before interaction starts
+
             ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
-
             Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().removeFirst();
-
-//            ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(nextCustomer);
 
             ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());
             ((Sem2) core).getCustomerInteractingWithTicketDispenser().add(nextCustomer);

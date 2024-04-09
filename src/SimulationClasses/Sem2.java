@@ -76,6 +76,8 @@ public class Sem2 extends EventBasedSimulationCore {
     private double averageNumberOfCustomersWaitingTicket;
     private double averageTimeLeaveSystem;
     private double averageUsePercentTicket;
+    private double confIntTimeInSystemLower = 0.0;
+    private double confIntTimeInSystemUpper = 0.0;
     private Customer lastCustomer = null;
 
     public Sem2(int numberOfWorkersOrder, int numberOfWorkersPayment, double maxTime, boolean turboMode, int timeGap) {
@@ -164,10 +166,12 @@ public class Sem2 extends EventBasedSimulationCore {
 
         this.delegates = new ArrayList<ISimDelegate>();
 
-        ArrivalEvent startEvent = new ArrivalEvent(0.0);
+        double next = this.arrivalsGenerator.generate() * 60.0;
+        ArrivalEvent startEvent = new ArrivalEvent(next);
+//        ArrivalEvent startEvent = new ArrivalEvent(0.0);
         this.addEvent(startEvent);
 
-        CloseShopEvent closeShopEvent = new CloseShopEvent(28800);
+        CloseShopEvent closeShopEvent = new CloseShopEvent(28800.0);
         this.addEvent(closeShopEvent);
 
         if (!turboMode) {
@@ -235,7 +239,8 @@ public class Sem2 extends EventBasedSimulationCore {
 
         timeLine.clear();
 
-        ArrivalEvent startEvent = new ArrivalEvent(0.0);
+        double next = this.arrivalsGenerator.generate() * 60.0;
+        ArrivalEvent startEvent = new ArrivalEvent(next);
         this.addEvent(startEvent);
 
         CloseShopEvent closeShopEvent = new CloseShopEvent(28800);
@@ -255,6 +260,10 @@ public class Sem2 extends EventBasedSimulationCore {
 
         this.numberOfCustomersWaitingTicketStat.setLastUpdateTime(0.0);
         this.averageUsePercentTicketStat.setLastUpdateTime(0.0);
+
+        this.averageTimeInSystemStat.calculateCorrectedStandardDeviation();
+        this.confIntTimeInSystemLower = this.averageTimeInSystemStat.calculateConfidenceIntervalLower(1.96);
+        this.confIntTimeInSystemUpper = this.averageTimeInSystemStat.calculateConfidenceIntervalUpper(1.96);
     }
 
     @Override
@@ -263,6 +272,7 @@ public class Sem2 extends EventBasedSimulationCore {
         this.averageUsePercentTicket = this.averageUsePercentTicketStat.calculateWeightedMean() * 100.0;
     }
 
+    //region getters and setters
     public int getHighestCustomerID() {
         return highestCustomerID;
     }
@@ -366,6 +376,7 @@ public class Sem2 extends EventBasedSimulationCore {
     public Random getTimeBigOrderPickUpGenerator() {
         return timeBigOrderPickUpGenerator;
     }
+
     public Random getPaymentTypeGenerator() {
         return paymentTypeGenerator;
     }
@@ -690,4 +701,21 @@ public class Sem2 extends EventBasedSimulationCore {
     public void setLastCustomer(Customer lastCustomer) {
         this.lastCustomer = lastCustomer;
     }
+
+    public double getConfIntTimeInSystemLower() {
+        return confIntTimeInSystemLower;
+    }
+
+    public void setConfIntTimeInSystemLower(double confIntTimeInSystemLower) {
+        this.confIntTimeInSystemLower = confIntTimeInSystemLower;
+    }
+
+    public double getConfIntTimeInSystemUpper() {
+        return confIntTimeInSystemUpper;
+    }
+
+    public void setConfIntTimeInSystemUpper(double confIntTimeInSystemUpper) {
+        this.confIntTimeInSystemUpper = confIntTimeInSystemUpper;
+    }
+    //endregion
 }

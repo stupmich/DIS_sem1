@@ -345,117 +345,6 @@
                           </component>
                         </children>
                       </grid>
-                      <grid id="4ac49" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="10" right="0"/>
-                        <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none" title="Štatistiky"/>
-                        <children>
-                          <component id="cd722" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Priemerný čas - prevádzka"/>
-                            </properties>
-                          </component>
-                          <hspacer id="15b1c">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                          <component id="ff8cd" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="95% IS priemerný čas - prevádzka"/>
-                            </properties>
-                          </component>
-                          <component id="b0947" class="javax.swing.JLabel" binding="averageTimeSystem">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <component id="83c67" class="javax.swing.JLabel" binding="ISAverageTimeSystem">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <component id="54805" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Priemerný čas - automat"/>
-                            </properties>
-                          </component>
-                          <component id="d551f" class="javax.swing.JLabel" binding="averageTimeAccept">
-                            <constraints>
-                              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <component id="45e72" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Priemerné percentuálne vyťaženie obslužných miest"/>
-                            </properties>
-                          </component>
-                          <component id="b6f80" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Priemerné percentuálne vyťaženie pokladní"/>
-                            </properties>
-                          </component>
-                          <component id="34ce0" class="javax.swing.JLabel" binding="averageCountFreeWorkers1">
-                            <constraints>
-                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <component id="3bead" class="javax.swing.JLabel" binding="averageCountFreeWorkers2">
-                            <constraints>
-                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <component id="62159" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Priemerný čas odchodu posledného zákazníka"/>
-                            </properties>
-                          </component>
-                          <component id="eee54" class="javax.swing.JLabel" binding="averageCountCustomersAfterEnd">
-                            <constraints>
-                              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
                       <grid id="6e75b" binding="panelButtons" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="10" bottom="10" right="10"/>
                         <constraints>
@@ -653,6 +542,165 @@
                           </grid>
                         </children>
                       </scrollpane>
+                      <grid id="d14b8" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="10" right="0"/>
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="Štatistiky"/>
+                        <children>
+                          <component id="c8b29" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerný čas - prevádzka"/>
+                            </properties>
+                          </component>
+                          <hspacer id="ba899">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                          </hspacer>
+                          <component id="c6968" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="95% IS priemerný čas - prevádzka"/>
+                            </properties>
+                          </component>
+                          <component id="5252e" class="javax.swing.JLabel" binding="averageTimeSystemWatchTime">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="34a9a" class="javax.swing.JLabel" binding="confIntervalTimeInSystemWatchTime">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="cfa9" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerný čas - automat"/>
+                            </properties>
+                          </component>
+                          <component id="e6feb" class="javax.swing.JLabel" binding="averageTimeQueueTicketWatchTime">
+                            <constraints>
+                              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="3a392" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerné percentuálne vyťaženie obslužných miest"/>
+                            </properties>
+                          </component>
+                          <component id="871cc" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerné percentuálne vyťaženie pokladní"/>
+                            </properties>
+                          </component>
+                          <component id="f478f" class="javax.swing.JLabel" binding="averageUsePercOrderWatchTime">
+                            <constraints>
+                              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="936af" class="javax.swing.JLabel" binding="averageUsePercPaymentWatchTime">
+                            <constraints>
+                              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="ed495" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerný čas odchodu posledného zákazníka"/>
+                            </properties>
+                          </component>
+                          <component id="f2d57" class="javax.swing.JLabel" binding="averageTimeLeaveSystemWatchTime">
+                            <constraints>
+                              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="60a53" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerný počet obslúžených zákazníkov"/>
+                            </properties>
+                          </component>
+                          <component id="887a9" class="javax.swing.JLabel" binding="averageNumberServedCustomersWatchTime">
+                            <constraints>
+                              <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="f54dd" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerný počet zákazníkov - automat"/>
+                            </properties>
+                          </component>
+                          <component id="2b4ec" class="javax.swing.JLabel" binding="averageNumberQueueTicketWatchTime">
+                            <constraints>
+                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="58365" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Priemerné percentuálne automatu"/>
+                            </properties>
+                          </component>
+                          <component id="d78a6" class="javax.swing.JLabel" binding="averageUsePercTicketWatchTime">
+                            <constraints>
+                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                 </children>
@@ -799,7 +847,7 @@
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="a97b7" class="javax.swing.JLabel">
+                  <component id="a97b7" class="javax.swing.JLabel" binding="confIntervalTimeInSystemTurbo">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -839,7 +887,7 @@
                       <text value="Priemerné percentuálne vyťaženie pokladní"/>
                     </properties>
                   </component>
-                  <component id="a1701" class="javax.swing.JLabel">
+                  <component id="a1701" class="javax.swing.JLabel" binding="averageUsePercOrderTurbo">
                     <constraints>
                       <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -847,7 +895,7 @@
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="85e1a" class="javax.swing.JLabel">
+                  <component id="85e1a" class="javax.swing.JLabel" binding="averageUsePercPaymentTurbo">
                     <constraints>
                       <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>

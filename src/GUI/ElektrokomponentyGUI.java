@@ -41,11 +41,6 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JLabel numberCarsGarage;
     private JLabel numberCustomersPayment;
     private JLabel averageTimeSystem;
-    private JLabel ISAverageTimeSystem;
-    private JLabel averageTimeAccept;
-    private JLabel averageCountFreeWorkers1;
-    private JLabel averageCountFreeWorkers2;
-    private JLabel averageCountCustomersAfterEnd;
     private JButton startWatchTimeButton;
     private JButton pauseWatchTimeButton;
     private JButton endWatchTimeButton;
@@ -85,6 +80,18 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     private JButton pauseButtonGraph;
     private JButton endButtonGraph;
     private JPanel JPanelGraph1;
+    private JLabel averageTimeSystemWatchTime;
+    private JLabel averageTimeQueueTicketWatchTime;
+    private JLabel averageNumberQueueTicketWatchTime;
+    private JLabel averageUsePercTicketWatchTime;
+    private JLabel averageUsePercOrderTurbo;
+    private JLabel averageUsePercPaymentTurbo;
+    private JLabel averageUsePercOrderWatchTime;
+    private JLabel averageUsePercPaymentWatchTime;
+    private JLabel averageTimeLeaveSystemWatchTime;
+    private JLabel averageNumberServedCustomersWatchTime;
+    private JLabel confIntervalTimeInSystemWatchTime;
+    private JLabel confIntervalTimeInSystemTurbo;
     private Sem2 simulation;
     private boolean turboMode;
     private DefaultTableModel modelWorkersOrder;
@@ -194,6 +201,9 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     public void refresh() {
         if (turboMode) {
             this.executedReplicationsTurbo.setText(Integer.toString(simulation.getExecutedReplications()));
+            this.confIntervalTimeInSystemTurbo.setText("<" + Double.toString(simulation.getConfIntTimeInSystemLower() / 60.0)
+                    + ";" + Double.toString(simulation.getConfIntTimeInSystemUpper() / 60.0)
+                    + ">");
             this.averageTimeSystemTurbo.setText(Double.toString(simulation.getAverageTimeInSystem() / 60.0));
             this.averageNumberServedCustomersTurbo.setText(Double.toString(simulation.getAverageServedCustomer()));
             this.averageTimeQueueTicketTurbo.setText(Double.toString(simulation.getAverageTimeTicket() / 60.0));
@@ -312,7 +322,23 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                 throw new RuntimeException(e);
             }
 
-            this.averageTimeSystem.setText(Double.toString(simulation.getAverageTimeInSystem() / 60.0));
+            this.averageTimeSystemWatchTime.setText(Double.toString(simulation.getAverageTimeInSystem() / 60.0));
+            this.confIntervalTimeInSystemWatchTime.setText("<" + Double.toString(simulation.getConfIntTimeInSystemLower() / 60.0)
+                    + ";" + Double.toString(simulation.getConfIntTimeInSystemUpper() / 60.0)
+                    + ">");
+            this.averageTimeSystemWatchTime.setText(Double.toString(simulation.getAverageTimeInSystem() / 60.0));
+            this.averageNumberServedCustomersWatchTime.setText(Double.toString(simulation.getAverageServedCustomer()));
+            this.averageTimeQueueTicketWatchTime.setText(Double.toString(simulation.getAverageTimeTicket() / 60.0));
+            this.averageNumberQueueTicketWatchTime.setText(Double.toString(simulation.getAverageNumberOfCustomersWaitingTicket()));
+            this.averageUsePercTicketWatchTime.setText(Double.toString(simulation.getAverageUsePercentTicket()));
+
+            // Convert seconds to hours, minutes and remaining seconds
+            long hoursTimeLeaveSystem = TimeUnit.SECONDS.toHours((long) simulation.getAverageTimeLeaveSystem());
+            long minutesTimeLeaveSystem = TimeUnit.SECONDS.toMinutes((long) simulation.getAverageTimeLeaveSystem()) - (hoursTimeLeaveSystem * 60);
+            long remainingSecondsTimeLeaveSystem = (long) (simulation.getAverageTimeLeaveSystem() - TimeUnit.HOURS.toSeconds(hoursTimeLeaveSystem) - TimeUnit.MINUTES.toSeconds(minutesTimeLeaveSystem));
+            // Format the time as "hours:minutes:seconds"
+            String time = String.format("%d:%02d:%02d", hoursTimeLeaveSystem, minutesTimeLeaveSystem, remainingSecondsTimeLeaveSystem);
+            this.averageTimeLeaveSystemWatchTime.setText(time);
         }
     }
 

@@ -29,9 +29,8 @@ public class StartServiceEvent extends Event {
         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
                 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9
                 && ((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0) {
-            // it is more safe to reserve place in shop before interaction starts
-            ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
 
+            ((Sem2) core).getNumberOfCustomersWaitingTicketStat().updateStatistics(core, ((Sem2) core).getQueueCustomersWaitingTicketDispenser());
             Customer nextCustomer = ((Sem2) core).getQueueCustomersWaitingTicketDispenser().removeFirst();
 
             ((Sem2) core).getAverageUsePercentTicketStat().updateStatistics(core, ((Sem2) core).getCustomerInteractingWithTicketDispenser());

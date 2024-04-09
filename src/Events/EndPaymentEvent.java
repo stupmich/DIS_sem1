@@ -15,7 +15,7 @@ public class EndPaymentEvent extends Event {
         if (customer.getBlockingWorker() != null) {
             // order of this customer was too big, he needs to pick up his order
             double next = ((Sem2) core).getTimeBigOrderPickUpGenerator().nextDouble(30.0,70.0);
-//            next = 0.0;
+
             OrderPickUpEvent orderPickUpEvent = new OrderPickUpEvent(time + next);
             orderPickUpEvent.setCustomer(customer);
             orderPickUpEvent.setWorker(customer.getBlockingWorker());
@@ -25,19 +25,19 @@ public class EndPaymentEvent extends Event {
             LeaveShopEvent leaveShopEvent = new LeaveShopEvent(time);
             leaveShopEvent.setCustomer(customer);
             core.addEvent(leaveShopEvent);
-
-            ((Sem2) core).incServedCustomers();
         }
 
         if (((Sem2) core).getQueuesCustomersWaitingForPayment().get(this.worker.getId()).isEmpty()) {
             // no customers in queue for this worker -> worker free
             worker.setIdCustomer(-1);
+            worker.setCustomer(null);
             ((Sem2) core).getWorkersPayment().add(worker);
             ((Sem2) core).getWorkersPaymentWorking().remove(worker);
         } else {
             // customer is waiting in queue for this worker -> new payment
             Customer nextCustomer = ((Sem2) core).getQueuesCustomersWaitingForPayment().get(this.worker.getId()).removeFirst();
             worker.setIdCustomer(nextCustomer.getId());
+            worker.setCustomer(nextCustomer);
 
             StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
             startPaymentEvent.setCustomer(nextCustomer);
