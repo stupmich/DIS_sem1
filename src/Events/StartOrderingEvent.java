@@ -4,7 +4,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class StartOrderingEvent extends Event {
+public class StartOrderingEvent extends EventElektro {
     public StartOrderingEvent(double time) {
         super(time);
     }

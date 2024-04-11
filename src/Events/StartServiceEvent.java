@@ -5,7 +5,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class StartServiceEvent extends Event {
+public class StartServiceEvent extends EventElektro {
     public StartServiceEvent(double time) {
         super(time);
     }

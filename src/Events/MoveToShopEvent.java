@@ -6,7 +6,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class MoveToShopEvent extends Event {
+public class MoveToShopEvent extends EventElektro {
     public MoveToShopEvent(double time) {
         super(time);
     }

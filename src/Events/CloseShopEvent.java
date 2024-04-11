@@ -4,7 +4,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class CloseShopEvent extends Event {
+public class CloseShopEvent extends EventElektro {
     public CloseShopEvent(double time) {
         super(time);
     }

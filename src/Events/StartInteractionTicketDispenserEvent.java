@@ -5,7 +5,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class StartInteractionTicketDispenserEvent extends Event {
+public class StartInteractionTicketDispenserEvent extends EventElektro {
     public StartInteractionTicketDispenserEvent(double time) {
         super(time);
     }

@@ -8,7 +8,7 @@ import SimulationClasses.Sem2;
 
 import java.util.LinkedList;
 
-public class OrderPickUpEvent extends Event {
+public class OrderPickUpEvent extends EventElektro {
     public OrderPickUpEvent(double time) {
         super(time);
     }

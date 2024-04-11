@@ -1,11 +1,10 @@
 package Events;
 
-import Entities.Customer;
 import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class LeaveShopEvent extends Event {
+public class LeaveShopEvent extends EventElektro {
     public LeaveShopEvent(double time) {
         super(time);
     }

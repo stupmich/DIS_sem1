@@ -291,10 +291,6 @@ public class Sem2 extends EventBasedSimulationCore {
         this.averageUsePercentTicket = this.averageUsePercentTicketStat.calculateWeightedMean() * 100.0;
         this.averageUsePercentPayment = (this.averageUsePercentPaymentStat.calculateWeightedMean() / ((double)this.numberOfWorkersPayment)) * 100.0;
 
-//        double averageUsePercentOrderNormal = this.averageUsePercentOrderNormalStat.calculateWeightedMean() / ((double)this.numberOfNormalWorkers);
-//        double averageUsePercentOrderOnline = this.averageUsePercentOrderOnlineStat.calculateWeightedMean() / ((double)this.numberOfOnlineWorkers);
-//        this.averageUsePercentOrder = (averageUsePercentOrderNormal + averageUsePercentOrderOnline) / 2.0 * 100.0;
-
         double averageUsePercentOrderNormal = this.averageUsePercentOrderNormalStat.calculateWeightedMean();
         double averageUsePercentOrderOnline = this.averageUsePercentOrderOnlineStat.calculateWeightedMean();
         double together = (averageUsePercentOrderNormal + averageUsePercentOrderOnline) / ((double)this.numberOfWorkersOrder);

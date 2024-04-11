@@ -5,11 +5,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-import java.awt.desktop.OpenFilesEvent;
-import java.util.IllegalFormatCodePointException;
-import java.util.LinkedList;
-
-public class ArrivalEvent extends Event {
+public class ArrivalEvent extends EventElektro {
     public ArrivalEvent(double time) {
         super(time);
     }

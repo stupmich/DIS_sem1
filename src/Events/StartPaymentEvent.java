@@ -4,7 +4,7 @@ import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class StartPaymentEvent extends Event {
+public class StartPaymentEvent extends EventElektro {
     public StartPaymentEvent(double time) {
         super(time);
     }

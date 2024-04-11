@@ -8,7 +8,7 @@ import SimulationClasses.Sem2;
 
 import java.util.LinkedList;
 
-public class EndPreparationEvent extends Event {
+public class EndPreparationEvent extends EventElektro {
     public EndPreparationEvent(double time) {
         super(time);
     }
