@@ -1,6 +1,7 @@
 package Events;
 
 import Entities.Customer;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -15,15 +16,7 @@ public class ArrivalEvent extends Event {
 
     @Override
     public void execute(EventBasedSimulationCore core) {
-        double type = ((Sem2) core).getCustomerTypeGenerator().nextDouble();
-
-        if (type < 0.50) {
-            customer = new Customer(time, Customer.CustomerType.REGULAR, ((Sem2) core).getHighestCustomerID());
-        } else if (type < 0.65) {
-            customer = new Customer(time, Customer.CustomerType.CONTRACT, ((Sem2) core).getHighestCustomerID());
-        } else {
-            customer = new Customer(time, Customer.CustomerType.ONLINE, ((Sem2) core).getHighestCustomerID());
-        }
+        customer = new Customer(time, ((Sem2) core).getHighestCustomerID());
 
         ((Sem2) core).incHighestCustomerID();
         ((Sem2) core).getAllCustomers().add(customer);
@@ -46,7 +39,6 @@ public class ArrivalEvent extends Event {
         double next = (((Sem2) core).getArrivalsGenerator().generate()) * 60.0;
         if (time + next <= 28800.0) {
             ArrivalEvent arrivalEvent = new ArrivalEvent(time + next);
-//            arrivalEvent.setPriority(1);
             core.addEvent(arrivalEvent);
         }
     }

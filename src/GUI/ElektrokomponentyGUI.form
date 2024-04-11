@@ -592,7 +592,7 @@
                               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
-                              <text value="Priemerný čas - automat"/>
+                              <text value="Priemerný čas vo fronte pred automatom"/>
                             </properties>
                           </component>
                           <component id="e6feb" class="javax.swing.JLabel" binding="averageTimeQueueTicketWatchTime">
@@ -672,7 +672,7 @@
                               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
-                              <text value="Priemerný počet zákazníkov - automat"/>
+                              <text value="Priemerná dĺžka frontu pred automatom"/>
                             </properties>
                           </component>
                           <component id="2b4ec" class="javax.swing.JLabel" binding="averageNumberQueueTicketWatchTime">
@@ -688,7 +688,7 @@
                               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
-                              <text value="Priemerné percentuálne automatu"/>
+                              <text value="Priemerné percentuálne vyťaženie automatu"/>
                             </properties>
                           </component>
                           <component id="d78a6" class="javax.swing.JLabel" binding="averageUsePercTicketWatchTime">
@@ -860,7 +860,7 @@
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Priemerný čas - automat"/>
+                      <text value="Priemerný čas vo fronte pred automatom"/>
                     </properties>
                   </component>
                   <component id="bab02" class="javax.swing.JLabel" binding="averageTimeQueueTicketTurbo">
@@ -940,7 +940,7 @@
                       <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Priemerný počet zákazníkov - automat"/>
+                      <text value="Priemerná dĺžka frontu pred automatom"/>
                     </properties>
                   </component>
                   <component id="8e8ba" class="javax.swing.JLabel" binding="averageNumberQueueTicketTurbo">
@@ -956,7 +956,7 @@
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Priemerné percentuálne automatu"/>
+                      <text value="Priemerné percentuálne vyťaženie automatu"/>
                     </properties>
                   </component>
                   <component id="9e18b" class="javax.swing.JLabel" binding="averageUsePercTicketTurbo">

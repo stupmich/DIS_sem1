@@ -2,6 +2,7 @@ package Events;
 
 import Entities.Customer;
 import Entities.Worker;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -24,6 +25,8 @@ public class OrderPickUpEvent extends Event {
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().removeLast();
                 workerPayment.setIdCustomer(customer.getId());
                 workerPayment.setCustomer(customer);
+
+                ((Sem2) core).getAverageUsePercentPaymentStat().updateStatistics(core, ((Sem2) core).getWorkersPaymentWorking());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -36,6 +39,8 @@ public class OrderPickUpEvent extends Event {
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().remove(indexOfWorkerPayment);
                 workerPayment.setIdCustomer(customer.getId());
                 workerPayment.setCustomer(customer);
+
+                ((Sem2) core).getAverageUsePercentPaymentStat().updateStatistics(core, ((Sem2) core).getWorkersPaymentWorking());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -56,9 +61,7 @@ public class OrderPickUpEvent extends Event {
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             Customer nextCustomerNormal = null;
 
-            LinkedList<Customer> l = ((Sem2) core).getCustomersWaitingInShopBeforeOrder();
             for (Customer c : ((Sem2) core).getCustomersWaitingInShopBeforeOrder()) {
-                if (c.isHasTicket()) {
                     if (c.getCustomerType() == Customer.CustomerType.CONTRACT) {
                         nextCustomerNormal = c;
                         break;
@@ -67,7 +70,6 @@ public class OrderPickUpEvent extends Event {
                     if (c.getCustomerType() == Customer.CustomerType.REGULAR && nextCustomerNormal == null) {
                         nextCustomerNormal = c;
                     }
-                }
             }
 
             if (nextCustomerNormal != null) {
@@ -82,6 +84,8 @@ public class OrderPickUpEvent extends Event {
                 worker.setIdCustomer(-1);
                 worker.setCustomer(null);
                 ((Sem2) core).getWorkersOrderNormal().add(worker);
+
+                ((Sem2) core).getAverageUsePercentOrderNormalStat().updateStatistics(core, ((Sem2) core).getWorkersOrderWorkingNormal());
                 ((Sem2) core).getWorkersOrderWorkingNormal().remove(worker);
             }
 
@@ -89,7 +93,7 @@ public class OrderPickUpEvent extends Event {
             Customer nextOnlineCustomer = null;
 
             for (Customer c : ((Sem2) core).getCustomersWaitingInShopBeforeOrder()) {
-                if (c.getCustomerType() == Customer.CustomerType.ONLINE && c.isHasTicket()) {
+                if (c.getCustomerType() == Customer.CustomerType.ONLINE) {
                     nextOnlineCustomer = c;
                     break;
                 }
@@ -107,9 +111,12 @@ public class OrderPickUpEvent extends Event {
                 worker.setIdCustomer(-1);
                 worker.setCustomer(null);
                 ((Sem2) core).getWorkersOrderOnline().add(worker);
+
+                ((Sem2) core).getAverageUsePercentOrderOnlineStat().updateStatistics(core, ((Sem2) core).getWorkersOrderWorkingOnline());
                 ((Sem2) core).getWorkersOrderWorkingOnline().remove(worker);
             }
         }
+
     }
 
     public void addCustomerToQueue(Customer customer, EventBasedSimulationCore core) {
@@ -128,8 +135,8 @@ public class OrderPickUpEvent extends Event {
 
         if (shortestQueues.size() == 1) {
             shortestQueues.get(0).add(customer);
-        } else if (shortestQueues.size() > 1) {
-            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator()[shortestQueues.size() - 2].nextInt(shortestQueues.size());
+        } else {
+            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator()[shortestQueues.size() - 2].nextInt(0, shortestQueues.size());
             shortestQueues.get(selectedQueueIndex).add(customer);
         }
     }

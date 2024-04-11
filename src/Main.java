@@ -19,7 +19,7 @@ public class Main {
         TriangularDistributionGenerator generator = new TriangularDistributionGenerator(min, max, mode);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 1000000; i++) {
                 double value = generator.generate();
                 writer.write(String.valueOf(value));
                 writer.newLine();

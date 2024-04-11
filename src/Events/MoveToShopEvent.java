@@ -2,6 +2,7 @@ package Events;
 
 import Entities.Customer;
 import Entities.Worker;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -12,15 +13,16 @@ public class MoveToShopEvent extends Event {
 
     @Override
     public void execute(EventBasedSimulationCore core) {
-        this.customer.setHasTicket(true);
+        this.customer.setStartTimeWaitingService(time);
 
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             if (((Sem2) core).getWorkersOrderNormal().size() != 0) {
                 // there are free workers for regular customers and with contract
-                Worker worker = ((Sem2) core).getWorkersOrderNormal().removeLast();
+                Worker worker = ((Sem2) core).getWorkersOrderNormal().removeFirst();
                 worker.setIdCustomer(customer.getId());
                 worker.setCustomer(customer);
 
+                ((Sem2) core).getAverageUsePercentOrderNormalStat().updateStatistics(core, ((Sem2) core).getWorkersOrderWorkingNormal());
                 ((Sem2) core).getWorkersOrderWorkingNormal().add(worker);
 
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);
@@ -33,10 +35,11 @@ public class MoveToShopEvent extends Event {
         } else {
             if (((Sem2) core).getWorkersOrderOnline().size() != 0) {
                 // there are free workers for online customers
-                Worker worker = ((Sem2) core).getWorkersOrderOnline().removeLast();
+                Worker worker = ((Sem2) core).getWorkersOrderOnline().removeFirst();
                 worker.setIdCustomer(customer.getId());
                 worker.setCustomer(customer);
 
+                ((Sem2) core).getAverageUsePercentOrderOnlineStat().updateStatistics(core, ((Sem2) core).getWorkersOrderWorkingOnline());
                 ((Sem2) core).getWorkersOrderWorkingOnline().add(worker);
 
                 StartServiceEvent startServiceEvent = new StartServiceEvent(time);

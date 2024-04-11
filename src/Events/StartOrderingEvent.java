@@ -1,10 +1,10 @@
 package Events;
 
-import Entities.Customer;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-public class StartOrderingEvent extends Event{
+public class StartOrderingEvent extends Event {
     public StartOrderingEvent(double time) {
         super(time);
     }

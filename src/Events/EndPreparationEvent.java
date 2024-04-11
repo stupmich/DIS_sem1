@@ -2,6 +2,7 @@ package Events;
 
 import Entities.Customer;
 import Entities.Worker;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -30,6 +31,8 @@ public class EndPreparationEvent extends Event {
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().removeLast();
                 workerPayment.setIdCustomer(customer.getId());
                 workerPayment.setCustomer(customer);
+
+                ((Sem2) core).getAverageUsePercentPaymentStat().updateStatistics(core, ((Sem2) core).getWorkersPaymentWorking());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -43,6 +46,8 @@ public class EndPreparationEvent extends Event {
                 Worker workerPayment = ((Sem2) core).getWorkersPayment().remove(indexOfWorkerPayment);
                 workerPayment.setIdCustomer(customer.getId());
                 workerPayment.setCustomer(customer);
+
+                ((Sem2) core).getAverageUsePercentPaymentStat().updateStatistics(core, ((Sem2) core).getWorkersPaymentWorking());
                 ((Sem2) core).getWorkersPaymentWorking().add(workerPayment);
 
                 StartPaymentEvent startPaymentEvent = new StartPaymentEvent(time);
@@ -80,8 +85,8 @@ public class EndPreparationEvent extends Event {
         // pick randomly queue where customer goes
         if (shortestQueues.size() == 1 ) {
             shortestQueues.get(0).add(customer);
-        } else if (shortestQueues.size() > 1) {
-            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator()[shortestQueues.size() - 2].nextInt(shortestQueues.size());
+        } else {
+            int selectedQueueIndex = ((Sem2) core).getIndexPaymentSameLengthOfQueueGenerator()[shortestQueues.size() - 2].nextInt(0, shortestQueues.size());
             shortestQueues.get(selectedQueueIndex).add(customer);
         }
     }

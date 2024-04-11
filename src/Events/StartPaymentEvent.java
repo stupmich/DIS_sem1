@@ -1,14 +1,10 @@
 package Events;
 
-import Entities.Customer;
-import Entities.Worker;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
-import java.sql.SQLOutput;
-import java.util.LinkedList;
-
-public class StartPaymentEvent extends Event{
+public class StartPaymentEvent extends Event {
     public StartPaymentEvent(double time) {
         super(time);
     }

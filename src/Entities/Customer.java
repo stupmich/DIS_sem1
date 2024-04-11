@@ -22,17 +22,14 @@ public class Customer {
     private CustomerType customerType;
     private OrderType orderType;
     private SizeOfOrder sizeOfOrder;
-    private double startOfWaitingInQueue;
-    private double waitingQueueTime;
-    private double serviceTime;
-    private double startOfService;
     private double timeLeaveSystem;
     private double timeArrival;
     private Worker blockingWorker;
-    private boolean hasTicket = false;
-    public Customer(double timeArrival, CustomerType type, int id) {
+    double startTimeWaitingService;
+    double endTimeWaitingService;
+
+    public Customer(double timeArrival, int id) {
         this.timeArrival = timeArrival;
-        this.customerType = type;
         this.id = id;
     }
 
@@ -60,38 +57,6 @@ public class Customer {
         this.orderType = orderType;
     }
 
-    public double getStartOfWaitingInQueue() {
-        return startOfWaitingInQueue;
-    }
-
-    public void setStartOfWaitingInQueue(double startOfWaitingInQueue) {
-        this.startOfWaitingInQueue = startOfWaitingInQueue;
-    }
-
-    public double getWaitingQueueTime() {
-        return waitingQueueTime;
-    }
-
-    public void setWaitingQueueTime(double waitingQueueTime) {
-        this.waitingQueueTime = waitingQueueTime;
-    }
-
-    public double getServiceTime() {
-        return serviceTime;
-    }
-
-    public void setServiceTime(double serviceTime) {
-        this.serviceTime = serviceTime;
-    }
-
-    public double getStartOfService() {
-        return startOfService;
-    }
-
-    public void setStartOfService(double startOfService) {
-        this.startOfService = startOfService;
-    }
-
     public double getTimeLeaveSystem() {
         return timeLeaveSystem;
     }
@@ -116,19 +81,27 @@ public class Customer {
         this.blockingWorker = blockingWorker;
     }
 
-    public boolean isHasTicket() {
-        return hasTicket;
-    }
-
-    public void setHasTicket(boolean hasTicket) {
-        this.hasTicket = hasTicket;
-    }
-
     public SizeOfOrder getSizeOfOrder() {
         return sizeOfOrder;
     }
 
     public void setSizeOfOrder(SizeOfOrder sizeOfOrder) {
         this.sizeOfOrder = sizeOfOrder;
+    }
+
+    public double getStartTimeWaitingService() {
+        return startTimeWaitingService;
+    }
+
+    public void setStartTimeWaitingService(double startTimeWaitingService) {
+        this.startTimeWaitingService = startTimeWaitingService;
+    }
+
+    public double getEndTimeWaitingService() {
+        return endTimeWaitingService;
+    }
+
+    public void setEndTimeWaitingService(double endTimeWaitingService) {
+        this.endTimeWaitingService = endTimeWaitingService;
     }
 }

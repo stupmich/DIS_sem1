@@ -1,13 +1,16 @@
 package SimulationClasses;
 
-import Events.Event;
-
 public class SystemEvent extends Event {
     private int timeGap;
 
     public SystemEvent(double time, int timeGap) {
         super(time);
         this.timeGap = timeGap;
+    }
+
+    @Override
+    public Event clone() {
+        return null;
     }
 
     @Override

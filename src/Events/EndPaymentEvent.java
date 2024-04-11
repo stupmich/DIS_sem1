@@ -1,7 +1,7 @@
 package Events;
 
 import Entities.Customer;
-import Entities.Worker;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -32,6 +32,8 @@ public class EndPaymentEvent extends Event {
             worker.setIdCustomer(-1);
             worker.setCustomer(null);
             ((Sem2) core).getWorkersPayment().add(worker);
+
+            ((Sem2) core).getAverageUsePercentPaymentStat().updateStatistics(core, ((Sem2) core).getWorkersPaymentWorking());
             ((Sem2) core).getWorkersPaymentWorking().remove(worker);
         } else {
             // customer is waiting in queue for this worker -> new payment

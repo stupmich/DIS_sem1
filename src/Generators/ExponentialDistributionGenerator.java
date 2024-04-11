@@ -23,7 +23,7 @@ public class ExponentialDistributionGenerator {
 
     public double generate() {
         double u = random.nextDouble();
-        double x = Math.log(1 - u) / (-lambda);
+        double x = -Math.log(1 - u) / (lambda);
         return x;
     }
 

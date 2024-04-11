@@ -1,6 +1,7 @@
 package Events;
 
 import Entities.Customer;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
@@ -11,6 +12,11 @@ public class StartServiceEvent extends Event {
 
     @Override
     public void execute(EventBasedSimulationCore core) {
+        this.customer.setEndTimeWaitingService(time);
+
+        double timeWaitingService = this.customer.getEndTimeWaitingService() - customer.getStartTimeWaitingService();
+        double average = ((Sem2) core).getAverageTimeWaitingServiceStat().calculateMean(timeWaitingService);
+
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             // regular customer and customer with contract has to make his order first
             StartOrderingEvent startOrderingEvent = new StartOrderingEvent(time);

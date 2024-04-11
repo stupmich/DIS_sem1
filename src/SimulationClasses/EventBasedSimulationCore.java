@@ -1,7 +1,5 @@
 package SimulationClasses;
 
-import Events.Event;
-
 import java.util.PriorityQueue;
 
 public abstract class EventBasedSimulationCore  extends SimulationCore{
@@ -27,12 +25,13 @@ public abstract class EventBasedSimulationCore  extends SimulationCore{
             lvEvent = timeLine.poll();
             currentTime = lvEvent.getTime();
 
-            if (currentTime > maxTime && timeLine.isEmpty()) {
+            if (currentTime > maxTime && timeLine.isEmpty() && (lvEvent instanceof SystemEvent)) {
                 break;
             }
 
             lvEvent.execute(this);
             this.updateStatistics();
+
             if (!turboMode) {
                 this.refreshGUI();
             }

@@ -1,7 +1,7 @@
 package Events;
 
 import Entities.Customer;
-import Entities.Worker;
+import SimulationClasses.Event;
 import SimulationClasses.EventBasedSimulationCore;
 import SimulationClasses.Sem2;
 
