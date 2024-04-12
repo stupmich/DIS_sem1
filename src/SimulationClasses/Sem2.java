@@ -69,6 +69,11 @@ public class Sem2 extends EventBasedSimulationCore {
     private WeightedArithmeticMean averageUsePercentOrderNormalStat;
     private WeightedArithmeticMean averageUsePercentOrderOnlineStat;
     private WeightedArithmeticMean averageUsePercentPaymentStat;
+    private double numberOfCustomersWaitingTicketSumThroughRep;
+    private double averageUsePercentTicketSumThroughRep;
+    private double averageUsePercentOrderTogetherSumThroughRep;
+    private double averageUsePercentOrderOnlineSumThroughRep;
+    private double averageUsePercentPaymentSumThroughRep;
     private double averageTimeInSystem;
     private double averageTimeTicket;
     private double averageServedCustomer;
@@ -214,7 +219,18 @@ public class Sem2 extends EventBasedSimulationCore {
         this.getAverageUsePercentOrderNormalStat().updateStatistics(this, this.getWorkersOrderWorkingNormal());
         this.getAverageUsePercentOrderOnlineStat().updateStatistics(this, this.getWorkersOrderWorkingOnline());
 
-       this.updateStatistics();
+        this.numberOfCustomersWaitingTicketSumThroughRep += this.getNumberOfCustomersWaitingTicketStat().calculateWeightedMean();
+        this.averageUsePercentTicketSumThroughRep += this.averageUsePercentTicketStat.calculateWeightedMean() * 100.0;
+        this.averageUsePercentPaymentSumThroughRep += (this.averageUsePercentPaymentStat.calculateWeightedMean() / ((double)this.numberOfWorkersPayment)) * 100.0;
+
+        double averageUsePercentOrderNormal = this.averageUsePercentOrderNormalStat.calculateWeightedMean();
+        double averageUsePercentOrderOnline = this.averageUsePercentOrderOnlineStat.calculateWeightedMean();
+        this.averageUsePercentOrderTogetherSumThroughRep += (averageUsePercentOrderNormal + averageUsePercentOrderOnline) / ((double)this.numberOfWorkersOrder) * 100.0;
+
+        this.averageNumberOfCustomersWaitingTicket = numberOfCustomersWaitingTicketSumThroughRep / ((double) this.executedReplications);
+        this.averageUsePercentTicket = averageUsePercentTicketSumThroughRep / ((double) this.executedReplications);
+        this.averageUsePercentPayment = averageUsePercentPaymentSumThroughRep / ((double) this.executedReplications);
+        this.averageUsePercentOrder = averageUsePercentOrderTogetherSumThroughRep / ((double) this.executedReplications);
 
         this.numberOfCustomersWaitingTicketStat.setLastUpdateTime(0.0);
         this.averageUsePercentTicketStat.setLastUpdateTime(0.0);

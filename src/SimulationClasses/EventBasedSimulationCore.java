@@ -30,7 +30,7 @@ public abstract class EventBasedSimulationCore  extends SimulationCore{
             }
 
             lvEvent.execute(this);
-            this.updateStatistics();
+            //this.updateStatistics();
 
             if (!turboMode) {
                 this.refreshGUI();
