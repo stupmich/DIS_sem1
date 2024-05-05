@@ -15,6 +15,8 @@ public class Main {
         ElektrokomponentyGUI gui = new ElektrokomponentyGUI();
     }
 
+    // 11 5 1589
+
     public static void testTriangularDistribution(String filename, double min, double max, double mode) {
         TriangularDistributionGenerator generator = new TriangularDistributionGenerator(min, max, mode);
 

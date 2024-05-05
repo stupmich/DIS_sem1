@@ -202,12 +202,24 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
     public void refresh() {
         if (turboMode) {
             this.executedReplicationsTurbo.setText(Integer.toString(simulation.getExecutedReplications()));
-            this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", simulation.getConfIntTimeInSystemLower() / 60.0)
-                    + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper() / 60.0)
+
+//            ************new stats************
+//            if (simulation.getExecutedReplications() > 2) {
+//                double[] confIntervalTimeInSystem95 = simulation.getTimeInSystemStatThroughReps().confidenceInterval_95();
+//                this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", confIntervalTimeInSystem95[0])
+//                        + " ; " + String.format("%.3f", confIntervalTimeInSystem95[1])
+//                        + ">");
+//            }
+            this.averageTimeSystemTurbo.setText(String.format("%.3f", simulation.getTimeInSystemStatThroughReps().mean()) + " sekúnd / " + String.format("%.3f", simulation.getTimeInSystemStatThroughReps().mean() / 60.0) + " minút");
+//            ************end new stats************
+
+//            this.averageTimeSystemTurbo.setText(String.format("%.3f", simulation.getAverageTimeInSystemStatThroughReps().getMean()) + " sekúnd / " + String.format("%.3f", simulation.getAverageTimeInSystemStatThroughReps().getMean() / 60.0) + " minút");
+            this.confIntervalTimeInSystemTurbo.setText("<" + String.format("%.3f", simulation.getConfIntTimeInSystemLower())
+                    + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper())
                     + ">");
-            this.averageTimeSystemTurbo.setText(String.format("%.3f", simulation.getAverageTimeInSystem()) + " sekúnd / " + String.format("%.3f", simulation.getAverageTimeInSystem() / 60.0) + " minút");
+
             this.averageNumberServedCustomersTurbo.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
-            this.averageTimeQueueTicketTurbo.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
+            this.averageTimeQueueTicketTurbo.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicketStatThroughReps().getMean()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicketStatThroughReps().getMean() / 60.0) + " minút");
             this.averageNumberQueueTicketTurbo.setText(String.format("%.3f", simulation.getAverageNumberOfCustomersWaitingTicket()));
             this.averageUsePercTicketTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");
             this.averageUsePercOrderTurbo.setText(String.format("%.2f", simulation.getAverageUsePercentOrder()) + "%");

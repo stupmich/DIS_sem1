@@ -31,6 +31,9 @@ public class MoveToShopEvent extends EventElektro {
                 core.addEvent(startServiceEvent);
             } else {
                 ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(customer);
+                if (((Sem2) core).getCustomersWaitingInShopBeforeOrder().size()>9) {
+                    System.out.println();
+                }
             }
         } else {
             if (((Sem2) core).getWorkersOrderOnline().size() != 0) {
@@ -48,6 +51,9 @@ public class MoveToShopEvent extends EventElektro {
                 core.addEvent(startServiceEvent);
             } else {
                 ((Sem2) core).getCustomersWaitingInShopBeforeOrder().add(customer);
+                if (((Sem2) core).getCustomersWaitingInShopBeforeOrder().size()>9) {
+                    System.out.println();
+                }
             }
         }
 

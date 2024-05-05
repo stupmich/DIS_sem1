@@ -28,4 +28,16 @@ public class ArithmeticMeanStatistics {
         double upperBound = mean + ((standardDeviationCorrected * ta) / Math.sqrt(count));
         return upperBound;
     }
+
+    public double getMean() {
+        return mean;
+    }
+
+    public void clearStat() {
+        this.totalSum = 0.0;
+        this.totalSumSquared = 0.0;
+        this.count = 0;
+        this.mean = 0.0;
+        this.standardDeviationCorrected = 0.0;
+    }
 }

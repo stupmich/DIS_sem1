@@ -4,11 +4,13 @@ import Entities.Customer;
 import Entities.Worker;
 import Events.ArrivalEvent;
 import Events.CloseShopEvent;
+import Events.EventAddService;
 import Events.LeaveShopEvent;
 import Generators.ContinuousEmpiricalDistributionGenerator;
 import Generators.ContinuousEmpiricalDistributionParameter;
 import Generators.ExponentialDistributionGenerator;
 import Generators.TriangularDistributionGenerator;
+import OSPStat.Stat;
 import Observer.ISimDelegate;
 import Statistics.ArithmeticMeanStatistics;
 import Statistics.WeightedArithmeticMean;
@@ -60,8 +62,9 @@ public class Sem2 extends EventBasedSimulationCore {
     private int customersOut;
     private int servedCustomers;
     private ArithmeticMeanStatistics averageTimeInSystemStat;
-    private ArithmeticMeanStatistics averageTimeWaitingServiceStat;
+    private ArithmeticMeanStatistics averageTimeInSystemStatThroughReps;
     private ArithmeticMeanStatistics averageTimeTicketStat;
+    private ArithmeticMeanStatistics averageTimeTicketStatThroughReps;
     private ArithmeticMeanStatistics averageServedCustomerStat;
     private ArithmeticMeanStatistics averageTimeLeaveSystemStat;
     private WeightedArithmeticMean numberOfCustomersWaitingTicketStat;
@@ -86,6 +89,9 @@ public class Sem2 extends EventBasedSimulationCore {
     private double confIntTimeInSystemUpper = 0.0;
     private Customer lastCustomer = null;
 
+    private Stat timeInSystemStat;
+    private Stat timeInSystemStatThroughReps;
+
     public Sem2(int numberOfWorkersOrder, int numberOfWorkersPayment, double maxTime, boolean turboMode, int timeGap) {
         super(maxTime, turboMode, timeGap);
         this.numberOfWorkersOrder = numberOfWorkersOrder;
@@ -98,8 +104,8 @@ public class Sem2 extends EventBasedSimulationCore {
         this.workersPayment = new LinkedList<Worker>();
         this.workersPaymentWorking = new LinkedList<Worker>();
 
-        numberOfNormalWorkers = (int) Math.round(this.numberOfWorkersOrder * 2.0 / 3.0);
-        numberOfOnlineWorkers = this.numberOfWorkersOrder - numberOfNormalWorkers;
+        this.numberOfOnlineWorkers = this.numberOfWorkersOrder / 3;
+        this.numberOfNormalWorkers = this.numberOfWorkersOrder - numberOfOnlineWorkers;
 
         for (int i = 0; i < numberOfNormalWorkers; i++ ) {
             Worker worker = new Worker(this.highestWorkersOrderID, Worker.WorkerType.ORDER_REGULAR_AND_CONTRACT);
@@ -186,34 +192,47 @@ public class Sem2 extends EventBasedSimulationCore {
             this.addEvent(nextSystemEvent);
         }
 
-        this.highestCustomerID = 0;
-        this.highestWorkersOrderID = 0;
-        this.highestWorkersPaymentID = 0;
-
         this.averageTimeInSystemStat = new ArithmeticMeanStatistics();
-        this.averageTimeWaitingServiceStat = new ArithmeticMeanStatistics();
+        this.averageTimeInSystemStatThroughReps = new ArithmeticMeanStatistics();
         this.averageTimeTicketStat = new ArithmeticMeanStatistics();
-        averageServedCustomerStat = new ArithmeticMeanStatistics();
-        averageTimeLeaveSystemStat = new ArithmeticMeanStatistics();
+        this.averageTimeTicketStatThroughReps = new ArithmeticMeanStatistics();
+        this.averageServedCustomerStat = new ArithmeticMeanStatistics();
+        this.averageTimeLeaveSystemStat = new ArithmeticMeanStatistics();
+
         numberOfCustomersWaitingTicketStat = new WeightedArithmeticMean();
         averageUsePercentTicketStat = new WeightedArithmeticMean();
         averageUsePercentOrderOnlineStat = new WeightedArithmeticMean();
         averageUsePercentOrderNormalStat = new WeightedArithmeticMean();
         averageUsePercentPaymentStat = new WeightedArithmeticMean();
+
+//        EventAddService addService = new EventAddService(14400.0);
+//        this.addEvent(addService);
+
+
+        timeInSystemStat = new Stat();
+        timeInSystemStatThroughReps = new Stat();
     }
 
     @Override
     public void afterOneReplication() {
         super.afterOneReplication();
+        executedReplications++;
 
+
+//       ****************New stats******************
+        this.timeInSystemStatThroughReps.addSample(this.timeInSystemStat.mean());
+//       ****************End new stats******************
+
+        this.averageTimeInSystemStatThroughReps.calculateMean(this.averageTimeInSystemStat.getMean());
+        this.averageTimeTicketStatThroughReps.calculateMean(this.averageTimeTicketStat.getMean());
         this.averageServedCustomer = this.averageServedCustomerStat.calculateMean(this.servedCustomers);
         double time = this.lastCustomer.getTimeLeaveSystem();
         time += 32400.0;
         this.averageTimeLeaveSystem = this.getAverageTimeLeaveSystemStat().calculateMean(time);
 
-        this.averageTimeInSystemStat.calculateCorrectedStandardDeviation();
-        this.confIntTimeInSystemLower = this.averageTimeInSystemStat.calculateConfidenceIntervalLower(1.96);
-        this.confIntTimeInSystemUpper = this.averageTimeInSystemStat.calculateConfidenceIntervalUpper(1.96);
+        this.averageTimeInSystemStatThroughReps.calculateCorrectedStandardDeviation();
+        this.confIntTimeInSystemLower = this.averageTimeInSystemStatThroughReps.calculateConfidenceIntervalLower(1.96);
+        this.confIntTimeInSystemUpper = this.averageTimeInSystemStatThroughReps.calculateConfidenceIntervalUpper(1.96);
 
         this.getAverageUsePercentPaymentStat().updateStatistics(this, this.getWorkersPaymentWorking());
         this.getAverageUsePercentOrderNormalStat().updateStatistics(this, this.getWorkersOrderWorkingNormal());
@@ -238,7 +257,15 @@ public class Sem2 extends EventBasedSimulationCore {
         this.averageUsePercentOrderOnlineStat.setLastUpdateTime(0.0);
         this.averageUsePercentPaymentStat.setLastUpdateTime(0.0);
 
-        executedReplications++;
+        this.averageTimeInSystemStat.clearStat();
+        this.averageTimeTicketStat.clearStat();
+
+        this.numberOfCustomersWaitingTicketStat.clearStat();
+        this.averageUsePercentTicketStat.clearStat();
+        this.averageUsePercentOrderNormalStat.clearStat();
+        this.averageUsePercentOrderOnlineStat.clearStat();
+        this.averageUsePercentPaymentStat.clearStat();
+
         currentTime = 0.0;
         highestCustomerID = 0;
         highestWorkersOrderID = 0;
@@ -251,8 +278,6 @@ public class Sem2 extends EventBasedSimulationCore {
         workersPayment.clear();
         workersPaymentWorking.clear();
 
-        int numberOfNormalWorkers = (int) Math.round(this.numberOfWorkersOrder * 2.0 / 3.0);
-        int numberOfOnlineWorkers = this.numberOfWorkersOrder - numberOfNormalWorkers;
 
         for (int i = 0; i < numberOfNormalWorkers; i++ ) {
             Worker worker = new Worker(this.highestWorkersOrderID, Worker.WorkerType.ORDER_REGULAR_AND_CONTRACT);
@@ -299,6 +324,11 @@ public class Sem2 extends EventBasedSimulationCore {
         this.customersOut = 0;
         this.customersIn = 0;
         this.servedCustomers = 0;
+
+        this.timeInSystemStat.clear();
+
+//        EventAddService addService = new EventAddService(14400.0);
+//        this.addEvent(addService);
     }
 
     @Override
@@ -629,8 +659,28 @@ public class Sem2 extends EventBasedSimulationCore {
         return averageUsePercentPayment;
     }
 
-    public ArithmeticMeanStatistics getAverageTimeWaitingServiceStat() {
-        return averageTimeWaitingServiceStat;
+    public int getHighestWorkersOrderID() {
+        return highestWorkersOrderID;
+    }
+
+    public int incHighestWorkersOrderID() {
+        return highestWorkersOrderID++;
+    }
+
+    public Stat getTimeInSystemStat() {
+        return timeInSystemStat;
+    }
+
+    public Stat getTimeInSystemStatThroughReps() {
+        return timeInSystemStatThroughReps;
+    }
+
+    public ArithmeticMeanStatistics getAverageTimeInSystemStatThroughReps() {
+        return averageTimeInSystemStatThroughReps;
+    }
+
+    public ArithmeticMeanStatistics getAverageTimeTicketStatThroughReps() {
+        return averageTimeTicketStatThroughReps;
     }
     //endregion
 }

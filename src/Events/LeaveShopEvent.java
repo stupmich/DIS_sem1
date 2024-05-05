@@ -20,5 +20,6 @@ public class LeaveShopEvent extends EventElektro {
 
         double timeInSystem = customer.getTimeLeaveSystem() - customer.getTimeArrival();
         ((Sem2) core).setAverageTimeInSystem(((Sem2) core).getAverageTimeInSystemStat().calculateMean(timeInSystem));
+        ((Sem2) core).getTimeInSystemStat().addSample(timeInSystem);
     }
 }

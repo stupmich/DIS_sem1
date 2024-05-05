@@ -23,7 +23,7 @@ public class StartInteractionTicketDispenserEvent extends EventElektro {
         }
 
         double timeTicket = time - customer.getTimeArrival();
-        ((Sem2) core).setAverageTimeTicket(((Sem2) core).getAverageTimeTicketStat().calculateMean(timeTicket));
+        ((Sem2) core).getAverageTimeTicketStat().calculateMean(timeTicket);
 
         double next = ((Sem2) core).getTimeTicketDispenserGenerator().nextDouble(30.0,120.0);
         MoveToShopEvent moveToShopEvent = new MoveToShopEvent(this.time + next);

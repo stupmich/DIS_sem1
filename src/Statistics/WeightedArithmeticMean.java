@@ -52,4 +52,13 @@ public class WeightedArithmeticMean {
     public void setLastUpdateTime(double lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
     }
+
+    public void clearStat() {
+        this.lastUpdateTime = 0.0;
+        this.weightedAverage = 0.0;
+        this.weightedSum = 0.0;
+        this.weightedSumSquared = 0.0;
+        this.totalWeight = 0.0;
+        this.correctedStandardDeviation = 0.0;
+    }
 }

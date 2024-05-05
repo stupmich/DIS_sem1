@@ -14,9 +14,6 @@ public class StartServiceEvent extends EventElektro {
     public void execute(EventBasedSimulationCore core) {
         this.customer.setEndTimeWaitingService(time);
 
-        double timeWaitingService = this.customer.getEndTimeWaitingService() - customer.getStartTimeWaitingService();
-        double average = ((Sem2) core).getAverageTimeWaitingServiceStat().calculateMean(timeWaitingService);
-
         if (this.customer.getCustomerType() == Customer.CustomerType.REGULAR || this.customer.getCustomerType() == Customer.CustomerType.CONTRACT) {
             // regular customer and customer with contract has to make his order first
             StartOrderingEvent startOrderingEvent = new StartOrderingEvent(time);
@@ -32,7 +29,7 @@ public class StartServiceEvent extends EventElektro {
         }
 
         // when new service is started place for another customer is free in shop
-        if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
+         if (((Sem2) core).getQueueCustomersWaitingTicketDispenser().size() != 0
                 && ((Sem2) core).getCustomersWaitingInShopBeforeOrder().size() < 9
                 && ((Sem2) core).getCustomerInteractingWithTicketDispenser().size() == 0) {
 
