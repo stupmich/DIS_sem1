@@ -343,8 +343,8 @@ public class ElektrokomponentyGUI extends JFrame implements ActionListener, ISim
                     + " ; " + String.format("%.3f", simulation.getConfIntTimeInSystemUpper() / 60.0)
                     + ">");
 
-            this.averageTimeSystemWatchTime.setText(String.format("%.3f", simulation.getAverageTimeInSystem()) + " sekúnd / " + String.format("%.3f", simulation.getAverageTimeInSystem() / 60.0) + " minút");
-            this.averageTimeQueueTicketWatchTime.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicket()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicket() / 60.0) + " minút");
+            this.averageTimeSystemWatchTime.setText(String.format("%.3f", simulation.getTimeInSystemStatThroughReps().mean()) + " sekúnd / " + String.format("%.3f", simulation.getTimeInSystemStatThroughReps().mean() / 60.0) + " minút");
+            this.averageTimeQueueTicketWatchTime.setText(String.format(String.format("%.3f", simulation.getAverageTimeTicketStatThroughReps().getMean()) + " sekúnd / " + "%.3f", simulation.getAverageTimeTicketStatThroughReps().getMean() / 60.0) + " minút");
             this.averageNumberServedCustomersWatchTime.setText(String.format("%.3f", simulation.getAverageServedCustomer()));
             this.averageNumberQueueTicketWatchTime.setText(String.format("%.3f", simulation.getAverageNumberOfCustomersWaitingTicket()));
             this.averageUsePercTicketWatchTime.setText(String.format("%.2f", simulation.getAverageUsePercentTicket()) + "%");

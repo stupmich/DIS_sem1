@@ -218,7 +218,6 @@ public class Sem2 extends EventBasedSimulationCore {
         super.afterOneReplication();
         executedReplications++;
 
-
 //       ****************New stats******************
         this.timeInSystemStatThroughReps.addSample(this.timeInSystemStat.mean());
 //       ****************End new stats******************
